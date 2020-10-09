@@ -13,8 +13,11 @@
 	int error(char* mensaje);
 
 	FILE  *yyin;
-%}
+	char auxS[100];
+	char mensajeDeError[200];
+	int finDeclaraciones = 0;
 
+%}
 %option noyywrap
 %option yylineno
 
@@ -29,25 +32,22 @@ ESPACIO     " "
 DIM			^<({CTE_STRING}|{LETRA})(\,{CTE_STRING}|{LETRA})*>$
 AS			^<({CTE_STRING})(\,{CTE_STRING})*>$
 
-%%
-
-CARACTER ({DIGITO}|{LETRA}|{SIMBOLO}|.|_)+
+CARACTER ({DIGITO}|{LETRA}|{CUALQUIERA}|.|_)+
 COMENTARIO_I "*-"
 COMENTARIO_F "-*"
 COMENTARIO_SIMPLE {COMENTARIO_I}({CARACTER}|[\r\n])*{COMENTARIO_F}
 COMENTARIO {COMENTARIO_I}({CARACTER}|{COMENTARIO_SIMPLE}|[\r\n])*{COMENTARIO_F}
 
+%%
+
 
 "WHILE"                     { return WHILE;}
-"ENDWHILE"                  { return ENDWHILE;}
 "IF"						{ return OP_IF;}
 "ELSE"						{ return ELSE;}
 "ENDIF"						{ return ENDIF;}
 "AND"						{ return OP_AND;}
 "OR"						{ return OP_OR;}
 "NOT"						{ return OP_NOT;}
-"VAR"					    { return VAR;}
-"ENDVAR"					{ return ENDVAR;}
 "FLOAT"						{ return TIPO_REAL;}
 "STRING"					{ return TIPO_CADENA;}
 "INT"						{ return TIPO_ENTERO;} 
@@ -80,8 +80,17 @@ COMENTARIO {COMENTARIO_I}({CARACTER}|{COMENTARIO_SIMPLE}|[\r\n])*{COMENTARIO_F}
 ","							{ return COMA;}
 ";"							{ return PUNTO_COMA;}
 ":"							{ return DOS_PUNTOS;}
-"\("						{ return PARENTESIS_ABIERTO;}
-"\)"						{ return PARENTESIS_CERRADO;}
+"_"							{ return GUION_BAJO;}
+
+
+
+{ID}						{
+								if(strlen(yytext) <= 30){
+									yylval.str_val = strdup(yytext);
+									return ID;
+								}
+								error("intenta limitar tus nombres de variables a 30 caracteres");
+							}
 
 
 {CTE_STRING}				{
@@ -90,7 +99,7 @@ COMENTARIO {COMENTARIO_I}({CARACTER}|{COMENTARIO_SIMPLE}|[\r\n])*{COMENTARIO_F}
 									char nombre_cte[length];
 									strcpy(nombre_cte, yytext+1); //Copio salteando la primera comilla
 									strcpy(nombre_cte + strlen(nombre_cte) - 1, "\0"); //Sobrescribo la ultima comilla con \0
-									strcpy(yylval.string_val, nombre_cte);
+									strcpy(yylval.str_val, nombre_cte);
 									return CTE_STRING;
 								}
 								error("Maximo permitido de string 30 caracteres");
@@ -112,21 +121,7 @@ COMENTARIO {COMENTARIO_I}({CARACTER}|{COMENTARIO_SIMPLE}|[\r\n])*{COMENTARIO_F}
 									return CTE_INT;
 								}
 								error("Superaste el tamanio maximo permitido para enteros.");
-							}
-
-{ID}						{
-								if(strlen(yytext) <= 30){
-									yylval.string_val = strdup(yytext);
-									return ID;
-								}
-								error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
-							}
-
-
-{DIM}						{
-
-							}
-
+							} 
 
 {ESPACIO}
 \n
@@ -137,17 +132,4 @@ COMENTARIO {COMENTARIO_I}({CARACTER}|{COMENTARIO_SIMPLE}|[\r\n])*{COMENTARIO_F}
 %%
 
 
-int error(char* mensaje)
-{
-	printf("Error lexico: %s\n", mensaje);
-	system ("Pause");
-	exit (1);
-}
 
-
-int yyerror(char* mensaje)
- {
-	printf("Syntax Error [linea %d]: %s\n", yylineno, mensaje);
-	system ("Pause");
-	exit (1);
- }
