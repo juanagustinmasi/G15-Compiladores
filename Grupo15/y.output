@@ -1,0 +1,1382 @@
+Terminals unused in grammar
+
+   TIPO_STRING
+   CA
+   CC
+   DOS_PUNTOS
+   CTE_STRING
+   CTE_FLOAT
+   CTE_INT
+   ESPACIO
+   GUION_BAJO
+
+
+Estado 51 conflictos: 7 desplazamiento(s)/reducción(ones)
+Estado 99 conflictos: 6 desplazamiento(s)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: start_programa $end
+
+    1 start_programa: programa
+
+    2 programa: bloque_declaracion bloque_programa
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR AS MENOR lista_tipo_dato MAYOR
+
+    4 lista_definiciones: lista_definiciones definicion
+    5                   | definicion
+
+    6 definicion: lista_ids
+
+    7 lista_tipo_dato: lista_tipo_dato COMA TIPO_ENTERO
+    8                | lista_tipo_dato COMA TIPO_REAL
+    9                | TIPO_ENTERO
+   10                | TIPO_REAL
+
+   11 lista_ids: lista_ids COMA ID
+   12          | ID
+
+   13 bloque_programa: bloque_programa sentencia
+   14                | sentencia
+   15                | LLAVE_ABIERTA sentencia LLAVE_CERRADA
+   16                | LLAVE_ABIERTA bloque_programa sentencia LLAVE_CERRADA
+
+   17 sentencia: asignacion
+   18          | bloque_condicional
+   19          | bloque_iteracion
+   20          | entrada_datos
+   21          | salida_datos
+
+   22 entrada_datos: GET ID PUNTO_COMA
+
+   23 salida_datos: PUT STRING PUNTO_COMA
+   24             | PUT ID PUNTO_COMA
+
+   25 bloque_iteracion: WHILE condicion LLAVE_ABIERTA bloque_programa LLAVE_CERRADA
+
+   26 asignacion: ID ASIG expresion PUNTO_COMA
+   27           | CONST ID OP_ASIG_IGUAL ENTERO PUNTO_COMA
+   28           | CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA
+   29           | CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA
+
+   30 expresion: expresion MAS termino
+   31          | expresion MENOS termino
+   32          | termino
+
+   33 termino: termino POR factor
+   34        | termino DIVIDIDO factor
+   35        | factor
+
+   36 factor: ID
+   37       | ENTERO
+   38       | REAL
+   39       | STRING
+   40       | PA expresion PC
+
+   41 bloque_condicional: bloque_if
+
+   42 bloque_if: OP_IF condicion bloque_programa
+   43          | OP_IF condicion bloque_programa ELSE bloque_programa
+
+   44 condicion: PA comparacion OP_AND comparacion PC
+   45          | PA comparacion OP_OR comparacion PC
+   46          | PA OP_NOT condicion PC
+   47          | PA comparacion PC
+
+   48 comparacion: expresion MAYOR expresion
+   49            | expresion MENOR expresion
+   50            | expresion MAYOR_IGUAL expresion
+   51            | expresion MENOR_IGUAL expresion
+   52            | expresion IGUAL expresion
+   53            | expresion DISTINTO expresion
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+WHILE (258) 25
+OP_IF (259) 42 43
+ELSE (260) 43
+OP_AND (261) 44
+OP_OR (262) 45
+OP_NOT (263) 46
+TIPO_REAL (264) 8 10
+TIPO_ENTERO (265) 7 9
+TIPO_STRING (266)
+CONST (267) 27 28 29
+PUT (268) 23 24
+GET (269) 22
+ASIG (270) 26
+MAS (271) 30
+MENOS (272) 31
+POR (273) 33
+DIVIDIDO (274) 34
+MENOR (275) 3 49
+MAYOR (276) 3 48
+MENOR_IGUAL (277) 51
+MAYOR_IGUAL (278) 50
+IGUAL (279) 52
+DISTINTO (280) 53
+PA (281) 40 44 45 46 47
+PC (282) 40 44 45 46 47
+CA (283)
+CC (284)
+COMA (285) 7 8 11
+PUNTO_COMA (286) 22 23 24 26 27 28 29
+DOS_PUNTOS (287)
+CTE_STRING (288)
+CTE_FLOAT (289)
+CTE_INT (290)
+DIM (291) 3
+AS (292) 3
+ESPACIO (293)
+GUION_BAJO (294)
+LLAVE_ABIERTA (295) 15 16 25
+LLAVE_CERRADA (296) 15 16 25
+REAL (297) 28 38
+ENTERO (298) 27 37
+ID (299) 11 12 22 24 26 27 28 29 36
+STRING (300) 23 29 39
+OP_ASIG_IGUAL (301) 27 28 29
+
+
+No terminales con las reglas donde aparecen
+
+$accept (47)
+    en la izquierda: 0
+start_programa (48)
+    en la izquierda: 1, en la derecha: 0
+programa (49)
+    en la izquierda: 2, en la derecha: 1
+bloque_declaracion (50)
+    en la izquierda: 3, en la derecha: 2
+lista_definiciones (51)
+    en la izquierda: 4 5, en la derecha: 3 4
+definicion (52)
+    en la izquierda: 6, en la derecha: 4 5
+lista_tipo_dato (53)
+    en la izquierda: 7 8 9 10, en la derecha: 3 7 8
+lista_ids (54)
+    en la izquierda: 11 12, en la derecha: 6 11
+bloque_programa (55)
+    en la izquierda: 13 14 15 16, en la derecha: 2 13 16 25 42 43
+sentencia (56)
+    en la izquierda: 17 18 19 20 21, en la derecha: 13 14 15 16
+entrada_datos (57)
+    en la izquierda: 22, en la derecha: 20
+salida_datos (58)
+    en la izquierda: 23 24, en la derecha: 21
+bloque_iteracion (59)
+    en la izquierda: 25, en la derecha: 19
+asignacion (60)
+    en la izquierda: 26 27 28 29, en la derecha: 17
+expresion (61)
+    en la izquierda: 30 31 32, en la derecha: 26 30 31 40 48 49 50
+    51 52 53
+termino (62)
+    en la izquierda: 33 34 35, en la derecha: 30 31 32 33 34
+factor (63)
+    en la izquierda: 36 37 38 39 40, en la derecha: 33 34 35
+bloque_condicional (64)
+    en la izquierda: 41, en la derecha: 18
+bloque_if (65)
+    en la izquierda: 42 43, en la derecha: 41
+condicion (66)
+    en la izquierda: 44 45 46 47, en la derecha: 25 42 43 46
+comparacion (67)
+    en la izquierda: 48 49 50 51 52 53, en la derecha: 44 45 47
+
+
+estado 0
+
+    0 $accept: . start_programa $end
+
+    DIM  desplazar e ir al estado 1
+
+    start_programa      ir al estado 2
+    programa            ir al estado 3
+    bloque_declaracion  ir al estado 4
+
+
+estado 1
+
+    3 bloque_declaracion: DIM . MENOR lista_definiciones MAYOR AS MENOR lista_tipo_dato MAYOR
+
+    MENOR  desplazar e ir al estado 5
+
+
+estado 2
+
+    0 $accept: start_programa . $end
+
+    $end  desplazar e ir al estado 6
+
+
+estado 3
+
+    1 start_programa: programa .
+
+    $default  reduce usando la regla 1 (start_programa)
+
+
+estado 4
+
+    2 programa: bloque_declaracion . bloque_programa
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_ABIERTA  desplazar e ir al estado 12
+    ID             desplazar e ir al estado 13
+
+    bloque_programa     ir al estado 14
+    sentencia           ir al estado 15
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 5
+
+    3 bloque_declaracion: DIM MENOR . lista_definiciones MAYOR AS MENOR lista_tipo_dato MAYOR
+
+    ID  desplazar e ir al estado 22
+
+    lista_definiciones  ir al estado 23
+    definicion          ir al estado 24
+    lista_ids           ir al estado 25
+
+
+estado 6
+
+    0 $accept: start_programa $end .
+
+    $default  aceptar
+
+
+estado 7
+
+   25 bloque_iteracion: WHILE . condicion LLAVE_ABIERTA bloque_programa LLAVE_CERRADA
+
+    PA  desplazar e ir al estado 26
+
+    condicion  ir al estado 27
+
+
+estado 8
+
+   42 bloque_if: OP_IF . condicion bloque_programa
+   43          | OP_IF . condicion bloque_programa ELSE bloque_programa
+
+    PA  desplazar e ir al estado 26
+
+    condicion  ir al estado 28
+
+
+estado 9
+
+   27 asignacion: CONST . ID OP_ASIG_IGUAL ENTERO PUNTO_COMA
+   28           | CONST . ID OP_ASIG_IGUAL REAL PUNTO_COMA
+   29           | CONST . ID OP_ASIG_IGUAL STRING PUNTO_COMA
+
+    ID  desplazar e ir al estado 29
+
+
+estado 10
+
+   23 salida_datos: PUT . STRING PUNTO_COMA
+   24             | PUT . ID PUNTO_COMA
+
+    ID      desplazar e ir al estado 30
+    STRING  desplazar e ir al estado 31
+
+
+estado 11
+
+   22 entrada_datos: GET . ID PUNTO_COMA
+
+    ID  desplazar e ir al estado 32
+
+
+estado 12
+
+   15 bloque_programa: LLAVE_ABIERTA . sentencia LLAVE_CERRADA
+   16                | LLAVE_ABIERTA . bloque_programa sentencia LLAVE_CERRADA
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_ABIERTA  desplazar e ir al estado 12
+    ID             desplazar e ir al estado 13
+
+    bloque_programa     ir al estado 33
+    sentencia           ir al estado 34
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 13
+
+   26 asignacion: ID . ASIG expresion PUNTO_COMA
+
+    ASIG  desplazar e ir al estado 35
+
+
+estado 14
+
+    2 programa: bloque_declaracion bloque_programa .
+   13 bloque_programa: bloque_programa . sentencia
+
+    WHILE  desplazar e ir al estado 7
+    OP_IF  desplazar e ir al estado 8
+    CONST  desplazar e ir al estado 9
+    PUT    desplazar e ir al estado 10
+    GET    desplazar e ir al estado 11
+    ID     desplazar e ir al estado 13
+
+    $default  reduce usando la regla 2 (programa)
+
+    sentencia           ir al estado 36
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 15
+
+   14 bloque_programa: sentencia .
+
+    $default  reduce usando la regla 14 (bloque_programa)
+
+
+estado 16
+
+   20 sentencia: entrada_datos .
+
+    $default  reduce usando la regla 20 (sentencia)
+
+
+estado 17
+
+   21 sentencia: salida_datos .
+
+    $default  reduce usando la regla 21 (sentencia)
+
+
+estado 18
+
+   19 sentencia: bloque_iteracion .
+
+    $default  reduce usando la regla 19 (sentencia)
+
+
+estado 19
+
+   17 sentencia: asignacion .
+
+    $default  reduce usando la regla 17 (sentencia)
+
+
+estado 20
+
+   18 sentencia: bloque_condicional .
+
+    $default  reduce usando la regla 18 (sentencia)
+
+
+estado 21
+
+   41 bloque_condicional: bloque_if .
+
+    $default  reduce usando la regla 41 (bloque_condicional)
+
+
+estado 22
+
+   12 lista_ids: ID .
+
+    $default  reduce usando la regla 12 (lista_ids)
+
+
+estado 23
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones . MAYOR AS MENOR lista_tipo_dato MAYOR
+    4 lista_definiciones: lista_definiciones . definicion
+
+    MAYOR  desplazar e ir al estado 37
+    ID     desplazar e ir al estado 22
+
+    definicion  ir al estado 38
+    lista_ids   ir al estado 25
+
+
+estado 24
+
+    5 lista_definiciones: definicion .
+
+    $default  reduce usando la regla 5 (lista_definiciones)
+
+
+estado 25
+
+    6 definicion: lista_ids .
+   11 lista_ids: lista_ids . COMA ID
+
+    COMA  desplazar e ir al estado 39
+
+    $default  reduce usando la regla 6 (definicion)
+
+
+estado 26
+
+   44 condicion: PA . comparacion OP_AND comparacion PC
+   45          | PA . comparacion OP_OR comparacion PC
+   46          | PA . OP_NOT condicion PC
+   47          | PA . comparacion PC
+
+    OP_NOT  desplazar e ir al estado 40
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion    ir al estado 46
+    termino      ir al estado 47
+    factor       ir al estado 48
+    comparacion  ir al estado 49
+
+
+estado 27
+
+   25 bloque_iteracion: WHILE condicion . LLAVE_ABIERTA bloque_programa LLAVE_CERRADA
+
+    LLAVE_ABIERTA  desplazar e ir al estado 50
+
+
+estado 28
+
+   42 bloque_if: OP_IF condicion . bloque_programa
+   43          | OP_IF condicion . bloque_programa ELSE bloque_programa
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_ABIERTA  desplazar e ir al estado 12
+    ID             desplazar e ir al estado 13
+
+    bloque_programa     ir al estado 51
+    sentencia           ir al estado 15
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 29
+
+   27 asignacion: CONST ID . OP_ASIG_IGUAL ENTERO PUNTO_COMA
+   28           | CONST ID . OP_ASIG_IGUAL REAL PUNTO_COMA
+   29           | CONST ID . OP_ASIG_IGUAL STRING PUNTO_COMA
+
+    OP_ASIG_IGUAL  desplazar e ir al estado 52
+
+
+estado 30
+
+   24 salida_datos: PUT ID . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 53
+
+
+estado 31
+
+   23 salida_datos: PUT STRING . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 54
+
+
+estado 32
+
+   22 entrada_datos: GET ID . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 55
+
+
+estado 33
+
+   13 bloque_programa: bloque_programa . sentencia
+   16                | LLAVE_ABIERTA bloque_programa . sentencia LLAVE_CERRADA
+
+    WHILE  desplazar e ir al estado 7
+    OP_IF  desplazar e ir al estado 8
+    CONST  desplazar e ir al estado 9
+    PUT    desplazar e ir al estado 10
+    GET    desplazar e ir al estado 11
+    ID     desplazar e ir al estado 13
+
+    sentencia           ir al estado 56
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 34
+
+   14 bloque_programa: sentencia .
+   15                | LLAVE_ABIERTA sentencia . LLAVE_CERRADA
+
+    LLAVE_CERRADA  desplazar e ir al estado 57
+
+    $default  reduce usando la regla 14 (bloque_programa)
+
+
+estado 35
+
+   26 asignacion: ID ASIG . expresion PUNTO_COMA
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 58
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 36
+
+   13 bloque_programa: bloque_programa sentencia .
+
+    $default  reduce usando la regla 13 (bloque_programa)
+
+
+estado 37
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR . AS MENOR lista_tipo_dato MAYOR
+
+    AS  desplazar e ir al estado 59
+
+
+estado 38
+
+    4 lista_definiciones: lista_definiciones definicion .
+
+    $default  reduce usando la regla 4 (lista_definiciones)
+
+
+estado 39
+
+   11 lista_ids: lista_ids COMA . ID
+
+    ID  desplazar e ir al estado 60
+
+
+estado 40
+
+   46 condicion: PA OP_NOT . condicion PC
+
+    PA  desplazar e ir al estado 26
+
+    condicion  ir al estado 61
+
+
+estado 41
+
+   40 factor: PA . expresion PC
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 62
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 42
+
+   38 factor: REAL .
+
+    $default  reduce usando la regla 38 (factor)
+
+
+estado 43
+
+   37 factor: ENTERO .
+
+    $default  reduce usando la regla 37 (factor)
+
+
+estado 44
+
+   36 factor: ID .
+
+    $default  reduce usando la regla 36 (factor)
+
+
+estado 45
+
+   39 factor: STRING .
+
+    $default  reduce usando la regla 39 (factor)
+
+
+estado 46
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   48 comparacion: expresion . MAYOR expresion
+   49            | expresion . MENOR expresion
+   50            | expresion . MAYOR_IGUAL expresion
+   51            | expresion . MENOR_IGUAL expresion
+   52            | expresion . IGUAL expresion
+   53            | expresion . DISTINTO expresion
+
+    MAS          desplazar e ir al estado 63
+    MENOS        desplazar e ir al estado 64
+    MENOR        desplazar e ir al estado 65
+    MAYOR        desplazar e ir al estado 66
+    MENOR_IGUAL  desplazar e ir al estado 67
+    MAYOR_IGUAL  desplazar e ir al estado 68
+    IGUAL        desplazar e ir al estado 69
+    DISTINTO     desplazar e ir al estado 70
+
+
+estado 47
+
+   32 expresion: termino .
+   33 termino: termino . POR factor
+   34        | termino . DIVIDIDO factor
+
+    POR       desplazar e ir al estado 71
+    DIVIDIDO  desplazar e ir al estado 72
+
+    $default  reduce usando la regla 32 (expresion)
+
+
+estado 48
+
+   35 termino: factor .
+
+    $default  reduce usando la regla 35 (termino)
+
+
+estado 49
+
+   44 condicion: PA comparacion . OP_AND comparacion PC
+   45          | PA comparacion . OP_OR comparacion PC
+   47          | PA comparacion . PC
+
+    OP_AND  desplazar e ir al estado 73
+    OP_OR   desplazar e ir al estado 74
+    PC      desplazar e ir al estado 75
+
+
+estado 50
+
+   25 bloque_iteracion: WHILE condicion LLAVE_ABIERTA . bloque_programa LLAVE_CERRADA
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_ABIERTA  desplazar e ir al estado 12
+    ID             desplazar e ir al estado 13
+
+    bloque_programa     ir al estado 76
+    sentencia           ir al estado 15
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 51
+
+   13 bloque_programa: bloque_programa . sentencia
+   42 bloque_if: OP_IF condicion bloque_programa .
+   43          | OP_IF condicion bloque_programa . ELSE bloque_programa
+
+    WHILE  desplazar e ir al estado 7
+    OP_IF  desplazar e ir al estado 8
+    ELSE   desplazar e ir al estado 77
+    CONST  desplazar e ir al estado 9
+    PUT    desplazar e ir al estado 10
+    GET    desplazar e ir al estado 11
+    ID     desplazar e ir al estado 13
+
+    WHILE     [reduce usando la regla 42 (bloque_if)]
+    OP_IF     [reduce usando la regla 42 (bloque_if)]
+    ELSE      [reduce usando la regla 42 (bloque_if)]
+    CONST     [reduce usando la regla 42 (bloque_if)]
+    PUT       [reduce usando la regla 42 (bloque_if)]
+    GET       [reduce usando la regla 42 (bloque_if)]
+    ID        [reduce usando la regla 42 (bloque_if)]
+    $default  reduce usando la regla 42 (bloque_if)
+
+    sentencia           ir al estado 36
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 52
+
+   27 asignacion: CONST ID OP_ASIG_IGUAL . ENTERO PUNTO_COMA
+   28           | CONST ID OP_ASIG_IGUAL . REAL PUNTO_COMA
+   29           | CONST ID OP_ASIG_IGUAL . STRING PUNTO_COMA
+
+    REAL    desplazar e ir al estado 78
+    ENTERO  desplazar e ir al estado 79
+    STRING  desplazar e ir al estado 80
+
+
+estado 53
+
+   24 salida_datos: PUT ID PUNTO_COMA .
+
+    $default  reduce usando la regla 24 (salida_datos)
+
+
+estado 54
+
+   23 salida_datos: PUT STRING PUNTO_COMA .
+
+    $default  reduce usando la regla 23 (salida_datos)
+
+
+estado 55
+
+   22 entrada_datos: GET ID PUNTO_COMA .
+
+    $default  reduce usando la regla 22 (entrada_datos)
+
+
+estado 56
+
+   13 bloque_programa: bloque_programa sentencia .
+   16                | LLAVE_ABIERTA bloque_programa sentencia . LLAVE_CERRADA
+
+    LLAVE_CERRADA  desplazar e ir al estado 81
+
+    $default  reduce usando la regla 13 (bloque_programa)
+
+
+estado 57
+
+   15 bloque_programa: LLAVE_ABIERTA sentencia LLAVE_CERRADA .
+
+    $default  reduce usando la regla 15 (bloque_programa)
+
+
+estado 58
+
+   26 asignacion: ID ASIG expresion . PUNTO_COMA
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+
+    MAS         desplazar e ir al estado 63
+    MENOS       desplazar e ir al estado 64
+    PUNTO_COMA  desplazar e ir al estado 82
+
+
+estado 59
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR AS . MENOR lista_tipo_dato MAYOR
+
+    MENOR  desplazar e ir al estado 83
+
+
+estado 60
+
+   11 lista_ids: lista_ids COMA ID .
+
+    $default  reduce usando la regla 11 (lista_ids)
+
+
+estado 61
+
+   46 condicion: PA OP_NOT condicion . PC
+
+    PC  desplazar e ir al estado 84
+
+
+estado 62
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   40 factor: PA expresion . PC
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+    PC     desplazar e ir al estado 85
+
+
+estado 63
+
+   30 expresion: expresion MAS . termino
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    termino  ir al estado 86
+    factor   ir al estado 48
+
+
+estado 64
+
+   31 expresion: expresion MENOS . termino
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    termino  ir al estado 87
+    factor   ir al estado 48
+
+
+estado 65
+
+   49 comparacion: expresion MENOR . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 88
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 66
+
+   48 comparacion: expresion MAYOR . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 89
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 67
+
+   51 comparacion: expresion MENOR_IGUAL . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 90
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 68
+
+   50 comparacion: expresion MAYOR_IGUAL . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 91
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 69
+
+   52 comparacion: expresion IGUAL . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 92
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 70
+
+   53 comparacion: expresion DISTINTO . expresion
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion  ir al estado 93
+    termino    ir al estado 47
+    factor     ir al estado 48
+
+
+estado 71
+
+   33 termino: termino POR . factor
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    factor  ir al estado 94
+
+
+estado 72
+
+   34 termino: termino DIVIDIDO . factor
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    factor  ir al estado 95
+
+
+estado 73
+
+   44 condicion: PA comparacion OP_AND . comparacion PC
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion    ir al estado 46
+    termino      ir al estado 47
+    factor       ir al estado 48
+    comparacion  ir al estado 96
+
+
+estado 74
+
+   45 condicion: PA comparacion OP_OR . comparacion PC
+
+    PA      desplazar e ir al estado 41
+    REAL    desplazar e ir al estado 42
+    ENTERO  desplazar e ir al estado 43
+    ID      desplazar e ir al estado 44
+    STRING  desplazar e ir al estado 45
+
+    expresion    ir al estado 46
+    termino      ir al estado 47
+    factor       ir al estado 48
+    comparacion  ir al estado 97
+
+
+estado 75
+
+   47 condicion: PA comparacion PC .
+
+    $default  reduce usando la regla 47 (condicion)
+
+
+estado 76
+
+   13 bloque_programa: bloque_programa . sentencia
+   25 bloque_iteracion: WHILE condicion LLAVE_ABIERTA bloque_programa . LLAVE_CERRADA
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_CERRADA  desplazar e ir al estado 98
+    ID             desplazar e ir al estado 13
+
+    sentencia           ir al estado 36
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 77
+
+   43 bloque_if: OP_IF condicion bloque_programa ELSE . bloque_programa
+
+    WHILE          desplazar e ir al estado 7
+    OP_IF          desplazar e ir al estado 8
+    CONST          desplazar e ir al estado 9
+    PUT            desplazar e ir al estado 10
+    GET            desplazar e ir al estado 11
+    LLAVE_ABIERTA  desplazar e ir al estado 12
+    ID             desplazar e ir al estado 13
+
+    bloque_programa     ir al estado 99
+    sentencia           ir al estado 15
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 78
+
+   28 asignacion: CONST ID OP_ASIG_IGUAL REAL . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 100
+
+
+estado 79
+
+   27 asignacion: CONST ID OP_ASIG_IGUAL ENTERO . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 101
+
+
+estado 80
+
+   29 asignacion: CONST ID OP_ASIG_IGUAL STRING . PUNTO_COMA
+
+    PUNTO_COMA  desplazar e ir al estado 102
+
+
+estado 81
+
+   16 bloque_programa: LLAVE_ABIERTA bloque_programa sentencia LLAVE_CERRADA .
+
+    $default  reduce usando la regla 16 (bloque_programa)
+
+
+estado 82
+
+   26 asignacion: ID ASIG expresion PUNTO_COMA .
+
+    $default  reduce usando la regla 26 (asignacion)
+
+
+estado 83
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR AS MENOR . lista_tipo_dato MAYOR
+
+    TIPO_REAL    desplazar e ir al estado 103
+    TIPO_ENTERO  desplazar e ir al estado 104
+
+    lista_tipo_dato  ir al estado 105
+
+
+estado 84
+
+   46 condicion: PA OP_NOT condicion PC .
+
+    $default  reduce usando la regla 46 (condicion)
+
+
+estado 85
+
+   40 factor: PA expresion PC .
+
+    $default  reduce usando la regla 40 (factor)
+
+
+estado 86
+
+   30 expresion: expresion MAS termino .
+   33 termino: termino . POR factor
+   34        | termino . DIVIDIDO factor
+
+    POR       desplazar e ir al estado 71
+    DIVIDIDO  desplazar e ir al estado 72
+
+    $default  reduce usando la regla 30 (expresion)
+
+
+estado 87
+
+   31 expresion: expresion MENOS termino .
+   33 termino: termino . POR factor
+   34        | termino . DIVIDIDO factor
+
+    POR       desplazar e ir al estado 71
+    DIVIDIDO  desplazar e ir al estado 72
+
+    $default  reduce usando la regla 31 (expresion)
+
+
+estado 88
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   49 comparacion: expresion MENOR expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 49 (comparacion)
+
+
+estado 89
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   48 comparacion: expresion MAYOR expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 48 (comparacion)
+
+
+estado 90
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   51 comparacion: expresion MENOR_IGUAL expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 51 (comparacion)
+
+
+estado 91
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   50 comparacion: expresion MAYOR_IGUAL expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 50 (comparacion)
+
+
+estado 92
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   52 comparacion: expresion IGUAL expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 52 (comparacion)
+
+
+estado 93
+
+   30 expresion: expresion . MAS termino
+   31          | expresion . MENOS termino
+   53 comparacion: expresion DISTINTO expresion .
+
+    MAS    desplazar e ir al estado 63
+    MENOS  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 53 (comparacion)
+
+
+estado 94
+
+   33 termino: termino POR factor .
+
+    $default  reduce usando la regla 33 (termino)
+
+
+estado 95
+
+   34 termino: termino DIVIDIDO factor .
+
+    $default  reduce usando la regla 34 (termino)
+
+
+estado 96
+
+   44 condicion: PA comparacion OP_AND comparacion . PC
+
+    PC  desplazar e ir al estado 106
+
+
+estado 97
+
+   45 condicion: PA comparacion OP_OR comparacion . PC
+
+    PC  desplazar e ir al estado 107
+
+
+estado 98
+
+   25 bloque_iteracion: WHILE condicion LLAVE_ABIERTA bloque_programa LLAVE_CERRADA .
+
+    $default  reduce usando la regla 25 (bloque_iteracion)
+
+
+estado 99
+
+   13 bloque_programa: bloque_programa . sentencia
+   43 bloque_if: OP_IF condicion bloque_programa ELSE bloque_programa .
+
+    WHILE  desplazar e ir al estado 7
+    OP_IF  desplazar e ir al estado 8
+    CONST  desplazar e ir al estado 9
+    PUT    desplazar e ir al estado 10
+    GET    desplazar e ir al estado 11
+    ID     desplazar e ir al estado 13
+
+    WHILE     [reduce usando la regla 43 (bloque_if)]
+    OP_IF     [reduce usando la regla 43 (bloque_if)]
+    CONST     [reduce usando la regla 43 (bloque_if)]
+    PUT       [reduce usando la regla 43 (bloque_if)]
+    GET       [reduce usando la regla 43 (bloque_if)]
+    ID        [reduce usando la regla 43 (bloque_if)]
+    $default  reduce usando la regla 43 (bloque_if)
+
+    sentencia           ir al estado 36
+    entrada_datos       ir al estado 16
+    salida_datos        ir al estado 17
+    bloque_iteracion    ir al estado 18
+    asignacion          ir al estado 19
+    bloque_condicional  ir al estado 20
+    bloque_if           ir al estado 21
+
+
+estado 100
+
+   28 asignacion: CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA .
+
+    $default  reduce usando la regla 28 (asignacion)
+
+
+estado 101
+
+   27 asignacion: CONST ID OP_ASIG_IGUAL ENTERO PUNTO_COMA .
+
+    $default  reduce usando la regla 27 (asignacion)
+
+
+estado 102
+
+   29 asignacion: CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA .
+
+    $default  reduce usando la regla 29 (asignacion)
+
+
+estado 103
+
+   10 lista_tipo_dato: TIPO_REAL .
+
+    $default  reduce usando la regla 10 (lista_tipo_dato)
+
+
+estado 104
+
+    9 lista_tipo_dato: TIPO_ENTERO .
+
+    $default  reduce usando la regla 9 (lista_tipo_dato)
+
+
+estado 105
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR AS MENOR lista_tipo_dato . MAYOR
+    7 lista_tipo_dato: lista_tipo_dato . COMA TIPO_ENTERO
+    8                | lista_tipo_dato . COMA TIPO_REAL
+
+    MAYOR  desplazar e ir al estado 108
+    COMA   desplazar e ir al estado 109
+
+
+estado 106
+
+   44 condicion: PA comparacion OP_AND comparacion PC .
+
+    $default  reduce usando la regla 44 (condicion)
+
+
+estado 107
+
+   45 condicion: PA comparacion OP_OR comparacion PC .
+
+    $default  reduce usando la regla 45 (condicion)
+
+
+estado 108
+
+    3 bloque_declaracion: DIM MENOR lista_definiciones MAYOR AS MENOR lista_tipo_dato MAYOR .
+
+    $default  reduce usando la regla 3 (bloque_declaracion)
+
+
+estado 109
+
+    7 lista_tipo_dato: lista_tipo_dato COMA . TIPO_ENTERO
+    8                | lista_tipo_dato COMA . TIPO_REAL
+
+    TIPO_REAL    desplazar e ir al estado 110
+    TIPO_ENTERO  desplazar e ir al estado 111
+
+
+estado 110
+
+    8 lista_tipo_dato: lista_tipo_dato COMA TIPO_REAL .
+
+    $default  reduce usando la regla 8 (lista_tipo_dato)
+
+
+estado 111
+
+    7 lista_tipo_dato: lista_tipo_dato COMA TIPO_ENTERO .
+
+    $default  reduce usando la regla 7 (lista_tipo_dato)
