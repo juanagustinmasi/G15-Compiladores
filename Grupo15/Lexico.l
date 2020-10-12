@@ -41,6 +41,7 @@ ESPACIO     " "
 
 %%
  /* Inicio del programa */
+ /* Declaracion de palabras reservadas y tokens del programa */
 
 "while"                     { return WHILE;}
 "if"						{ return OP_IF;}
@@ -83,7 +84,10 @@ ESPACIO     " "
 "_"							{ return GUION_BAJO;}
 "{"						{ return LLAVE_ABIERTA;}
 "}"						{ return LLAVE_CERRADA;}
-"="							{ return OP_ASIG_IGUAL;}	
+"="							{ return OP_ASIG_IGUAL;}
+
+
+ /* Identificadores y constantes */	
 
 {ID}						{
 								if(strlen(yytext) <= 30){
