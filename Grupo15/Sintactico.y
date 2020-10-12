@@ -10,9 +10,9 @@ FILE  *yyin;
 char *yyltext;
 char *yytext;
 
+/* Funciones necesarias */
 int yylex();
 int yyerror();
-
 void error(char *mensaje);
 
 %}
