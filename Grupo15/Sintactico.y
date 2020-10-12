@@ -26,6 +26,7 @@ void error(char *mensaje);
 
 %start start_programa
 
+/* Lista de TOkens */
 
 %token WHILE
 OP_IF
