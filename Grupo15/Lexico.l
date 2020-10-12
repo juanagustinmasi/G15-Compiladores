@@ -40,7 +40,7 @@ ESPACIO     " "
 
 
 %%
-
+ /* Inicio del programa */
 
 "while"                     { return WHILE;}
 "if"						{ return OP_IF;}
