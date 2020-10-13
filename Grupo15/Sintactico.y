@@ -15,6 +15,39 @@ int yylex();
 int yyerror();
 void error(char *mensaje);
 
+/* -------- TABLA DE SIMBOLOS -------- */
+
+#define TAM_TABLA 300
+#define TAM_NOMBRE 100
+#define TAM_VALOR 100
+#define TAM_TIPO 50
+#define CAD_MAX 50
+#define TAM_LINEA 300
+#define TAM_NOMB_LINEA 100
+
+typedef struct
+{
+	char nombre [TAM_NOMBRE];
+	char tipo  [TAM_TIPO];
+	char valor [TAM_VALOR];
+	int longitud;
+} structTablaS;
+
+structTablaS tablaSimbolos[TAM_TABLA];
+
+/* PROTOTIPOS */
+
+void crearTabla();
+void insertarEnTabla(char*, char*, char*, char*);
+void guardarEnTabla(char* nombre, char* tipo, char* valor, char* longitud);
+int buscarEnTabla(char* nombre);
+
+/* VARIABLES */
+
+int cantTokens = 0;
+int constantes = 0;
+int i = 0;
+
 %}
 
 %union {
@@ -216,6 +249,7 @@ int main(int argc,char *argv[]){
 	}else {
 		
 		yyparse();
+		crearTabla();
 		
 	}
 	fclose(yyin);
@@ -231,4 +265,67 @@ int yyerror(void){
 	printf("ERROR EN COMPILACION.\n");
 	system ("Pause");
 	exit (1);
+}
+
+void crearTabla(){
+	if(cantTokens == -1)
+	yyerror();
+
+	FILE* arch = fopen("tablaSimbolos.txt", "w+");
+	if(!arch){
+		printf("No pude crear el archivo tablaSimbolos.txt\n");
+		return;
+	}
+
+	fprintf(arch,"%-15s%-10s%-15s%-10s\n","NOMBRE","TIPO","VALOR", "LONGITUD");
+	fprintf(arch, "\n");
+
+	fclose(arch);
+}
+
+void insertarEnTabla(char* nombre, char* tipo, char* valor, char* longitud){
+	if (buscarEnTabla(nombre) != 0)
+	{
+		guardarEnTabla(nombre, tipo, valor, longitud);
+	}
+}
+
+void guardarEnTabla(char* nombre, char* tipo, char* valor, char* longitud)
+{
+    FILE *arch = fopen("tablaSimbolos.txt", "a");
+    if (!arch)
+    {
+        arch = fopen("tablaSimbolos.txt", "w+");
+        crearTabla(arch);
+        fprintf(arch, "%-15s%-10s%-15s%-10d\n", &(tablaSimbolos[i].nombre), &(tablaSimbolos[i].tipo) , &(tablaSimbolos[i].valor), tablaSimbolos[i].longitud);
+        fclose(arch);
+    }
+    else
+    {
+    	fprintf(arch, "%-15s%-10s%-15s%-10d\n", &(tablaSimbolos[i].nombre), &(tablaSimbolos[i].tipo) , &(tablaSimbolos[i].valor), tablaSimbolos[i].longitud);
+
+        fclose(arch);
+    }
+}
+
+int buscarEnTabla(char* nombre){
+	char linea[TAM_LINEA],
+		nombreLinea[TAM_NOMB_LINEA];
+
+	FILE *arch = fopen("tablaSimbolos.txt", "r");
+    if(arch!= NULL)
+	{
+		while(fgets(linea,sizeof(linea),arch))
+		{
+
+			if(strcmp(nombreLinea, nombre) == 0){
+				fclose(arch);
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	fclose(arch);
+	return 0;
 }
