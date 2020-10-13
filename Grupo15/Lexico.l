@@ -92,6 +92,7 @@ ESPACIO     " "
 {ID}						{
 								if(strlen(yytext) <= 30){
 									yylval.str_val = strdup(yytext);
+									insertarEnTabla(normalizar(yytext), "ID", yytext, "");
 									return ID;
 								}
 								error("intenta limitar tus nombres de variables a 30 caracteres");
@@ -103,6 +104,7 @@ ESPACIO     " "
 {REAL}					{
 								if(atof(yytext)<=3.40282347e+38F){
 									yylval.float_val = atof(yytext);
+									insertarEnTabla(normalizar(yytext), "REAL", yytext, "");
 									return REAL;
 								}
 								error("Superaste el tamanio maximo permitido para float");
@@ -112,6 +114,7 @@ ESPACIO     " "
 {ENTERO}					{
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
+									insertarEnTabla(normalizar(yytext), "ENTERO", yytext, "");
 									return ENTERO;
 								}
 								error("Superaste el tamanio maximo permitido para enteros.");
@@ -126,6 +129,7 @@ ESPACIO     " "
 							sprintf(auxS,"%s", yytext);
 							quitarComillas();
 							yylval.str_val=auxS; 
+							insertarEnTabla(normalizar(yytext), "STRING", yytext, auxS);
 							return STRING;
 							}
 
@@ -152,4 +156,12 @@ void quitarComillas() {
 		i++;
 	}
 	auxS[i] = '\0';
+}
+
+char* normalizar(char* cadena)
+{
+	char *aux = (char *) malloc(sizeof(char) * (strlen(cadena)) + 2);
+	strcpy(aux,"_");
+	strcat(aux,cadena);
+	return aux;
 }
