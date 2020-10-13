@@ -1,1 +1,0 @@
-DIM < contador,promedio,actual,suma> AS < Integer,Float,Float,Float >
