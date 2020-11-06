@@ -108,6 +108,8 @@ ID
 STRING
 OP_ASIG_IGUAL
 CONTAR
+CUALQUIERA
+NOT
 %%
 
 start_programa : 
@@ -145,6 +147,7 @@ lista_tipo_dato:
 	 lista_tipo_dato COMA TIPO_ENTERO{ printf("lista tipo dato, ENTERO OK\n\n");}
 	
 	| lista_tipo_dato COMA TIPO_REAL{ printf("lista tipo dato, REAL OK\n\n");} 
+	| lista_tipo_dato COMA TIPO_STRING{ printf("lista tipo dato, STRING OK\n\n");} 
   	|TIPO_ENTERO       
 		{
 		printf("TIPO_ENTERO en tipo_variable OK\n");
@@ -153,6 +156,10 @@ lista_tipo_dato:
 		{
 		printf("TIPO_REAL en tipo_variable OK\n");
 		}
+	|TIPO_STRING
+		{
+			printf("TIPO_STRING en tipo_variable OK \n");
+		}	
 
 
 
@@ -180,6 +187,9 @@ salida_datos:
 			{printf("PRINT CADENA OK \n\n");}
 		| PUT ID  PUNTO_COMA
 			{printf("PRINT ID OK\n\n");}
+		| PUT CA TIPO_STRING CC PUNTO_COMA
+			{printf("PRINT CUALQUIER TEXTO OK\n");}
+			
 			
 		
 
@@ -192,7 +202,7 @@ asignacion:
 			|CONST ID OP_ASIG_IGUAL ENTERO PUNTO_COMA 	{ printf("CONST ID = ENTERO; -> OK\n\n");}
 			|CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA 	{ printf("CONST ID = REAL; -> OK\n\n");}
 			|CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA 	{ printf("CONST ID = STRING; -> OK\n\n");}
-			
+			|ID OP_ASIG_IGUAL STRING PUNTO_COMA			{ printf(" ID = STRING; -> OK\n\n");}
 
 expresion:
 		expresion MAS termino  		{printf("expresion -> exp + term OK \n\n");}

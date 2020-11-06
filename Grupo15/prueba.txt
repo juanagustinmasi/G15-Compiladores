@@ -1,4 +1,6 @@
-DIM < contador ,promedio,actual,suma> AS < Integer ,Float,Float,Float >
+DIM < contador ,promedio,actual,suma,cad> AS < Integer ,Float,Float,Float,String>
+cad = "udasefaousjednaosuirjpideeeee";
+PUT cad;
 CONST nombre=80;
 PUT "Prueba.txt LyC Tema 4!";
 PUT "Ingrese un valor entero para actual: ";

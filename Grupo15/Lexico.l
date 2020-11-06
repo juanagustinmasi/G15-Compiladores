@@ -7,7 +7,7 @@
 
     #define LIMITE_REAL 2147483647
     #define LIMITE_ENTERO 32768
-    #define LIMITE_CADENA 300
+    #define LIMITE_CADENA 30
     #define LIMITE_ID 30
 
 	int error(char* mensaje);
@@ -71,6 +71,7 @@ ESPACIO     " "
 ">="						{ return MAYOR_IGUAL;}
 "=="						{ return IGUAL;}
 "<>"						{ return DISTINTO;}
+"not"						{ return NOT;}
 
  /* Otros simbolos */
 "("							{ return PA;}
