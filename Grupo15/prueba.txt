@@ -3,7 +3,7 @@ cad = "udasefaousjednaosuirjpideeeee";
 PUT cad;
 CONST nombre=80;
 PUT "Prueba.txt LyC Tema 4!";
-PUT "Ingrese un valor entero para actual: ";
+PUT "Ingrese entero para actual: ";
 GET actual;
 contador: 0;
 suma: 02.5+nombre;
@@ -16,7 +16,7 @@ suma: suma + actual;
 PUT "La suma es: ";
 PUT suma;
 if (actual>2 and actual <> 0){
-PUT "actual es mayor que 2 y distinto de cero";
+PUT "actual es > que 2 y <> de 0";
 }
 Else
 {
