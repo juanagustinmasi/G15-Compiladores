@@ -247,10 +247,10 @@ condicion:
 comparacion : 
 		expresion MAYOR expresion			{printf("mayor  OK \n\n");}
 		| expresion MENOR expresion			{printf("menor OK \n\n");}
-		| expresion MAYOR_IGUAL expresion 	{printf("mayorigual OK \n\n");}
-		| expresion MENOR_IGUAL expresion	{printf("menorrigual OK \n\n");}
+		| expresion MAYOR_IGUAL expresion 	{printf("mayor igual OK \n\n");}
+		| expresion MENOR_IGUAL expresion	{printf("menor igual OK \n\n");}
 		|expresion IGUAL expresion			{printf("igual OK \n\n");}
-		|expresion DISTINTO expresion		{printf("djistinto OK \n\n");}
+		|expresion DISTINTO expresion		{printf("distinto OK \n\n");}
 			
 
 %%
