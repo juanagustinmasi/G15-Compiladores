@@ -1,0 +1,7 @@
+DIM <actual> AS <Integer>
+
+actual:1;
+
+if (actual>2 ){
+PUT "actual es > que 2 y <> de 0";
+}

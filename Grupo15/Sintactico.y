@@ -30,6 +30,7 @@ void error(char *mensaje);
 #define CAD_MAX 50
 #define TAM_LINEA 300
 #define TAM_NOMB_LINEA 100
+#define NUMERO_INICIAL_TERCETO 10
 
 typedef struct
 {
@@ -66,11 +67,40 @@ typedef struct
 		nodo_cola_t *pri, *ult;
 	} cola_t;
 
+typedef struct
+	{
+		char descripcion[TAM];
+		int numero_terceto;
+	} info_pila_t;
+
+	typedef struct sNodoPila
+	{
+		info_pila_t info;
+		struct sNodoPila *sig;
+	} nodo_pila_t;
+	
+	typedef nodo_pila_t *pila_t;
 
 lista_t l_ts;
 info_t d;
 cola_t cola_tipo_id;
 info_cola_t info_tipo_id;
+cola_t cola_terceto;
+info_cola_t info_terceto_get;
+info_cola_t info_terceto_put;
+info_cola_t info_terceto_factor;
+info_cola_t info_terceto_asig;
+info_cola_t info_terceto_termino;
+info_cola_t info_terceto_expresion;
+info_cola_t terceto_if;
+info_cola_t terceto_cmp;
+info_cola_t	terceto_operador_logico;
+pila_t comparaciones;
+info_pila_t comparador;
+info_pila_t comparacion;
+pila_t saltos_incondicionales;
+info_pila_t salto_incondicional;
+
 
 /* PROTOTIPOS */
 
@@ -88,11 +118,32 @@ void crear_lista(lista_t *p);
 void guardar_lista(lista_t *p, FILE *arch);
 int comparar(info_t*d1, info_t*d2);
 
+int crearTerceto(info_cola_t *info_terceto);
+void leerTerceto(int numero_terceto, info_cola_t *info_terceto_output);
+void modificarTerceto(int numero_terceto, info_cola_t *info_terceto_input);
+char *normalizarPunteroTerceto(int terceto_puntero);
+void clear_intermedia();
+void crear_intermedia(cola_t *cola_intermedia);
+void guardar_intermedia(cola_t *p, FILE *arch);
+void crear_pila(pila_t *p);
+int poner_en_pila(pila_t *p, info_pila_t *d);
+int sacar_de_pila(pila_t*p, info_pila_t *d);
+
 /* VARIABLES */
 
 int cantTokens = 0;
 int constantes = 0;
 int i = 0;
+int numero_terceto = NUMERO_INICIAL_TERCETO;
+int cant_total_tercetos=0;
+
+char char_puntero_terceto[TAM];
+int p_terceto_expresion;
+int p_terceto_expresion_pibot;
+int p_terceto_termino;
+int p_terceto_factor;
+int p_terceto_if_then;
+int p_terceto_if;
 
 
 
@@ -257,15 +308,31 @@ sentencia :
 
 entrada_datos: 
 		GET ID PUNTO_COMA 
-			{printf("GET ID -> OK \n\n");}
+			{printf("GET ID -> OK \n\n");
+			strcpy(info_terceto_get.posicion_a, "GET");
+			strcpy(info_terceto_get.posicion_b, yylval.str_val);
+			strcpy(info_terceto_get.posicion_c, "_");
+			crearTerceto(&info_terceto_get);}
 
 salida_datos: 
 		PUT STRING PUNTO_COMA 
-			{printf("PRINT CADENA OK \n\n");}
+			{printf("PRINT CADENA OK \n\n");
+			strcpy(info_terceto_put.posicion_a, "PUT");
+			strcpy(info_terceto_put.posicion_b, yylval.str_val);
+			strcpy(info_terceto_put.posicion_c, "_");
+			crearTerceto(&info_terceto_put);}
 		| PUT ID  PUNTO_COMA
-			{printf("PRINT ID OK\n\n");}
+			{printf("PRINT ID OK\n\n");
+			strcpy(info_terceto_put.posicion_a, "PUT");
+			strcpy(info_terceto_put.posicion_b, yylval.str_val);
+			strcpy(info_terceto_put.posicion_c, "_");
+			crearTerceto(&info_terceto_put);}
 		| PUT CA TIPO_STRING CC PUNTO_COMA
-			{printf("PRINT CUALQUIER TEXTO OK\n");}
+			{printf("PRINT CUALQUIER TEXTO OK\n");
+			strcpy(info_terceto_put.posicion_a, "PUT");
+			strcpy(info_terceto_put.posicion_b, yylval.str_val);
+			strcpy(info_terceto_put.posicion_c, "_");
+			crearTerceto(&info_terceto_put);}
 			
 		
 
@@ -274,40 +341,82 @@ bloque_iteracion:
 		   {printf("bloque WHILE -> OK\n\n");}
 
 asignacion:
-		 	 ID ASIG expresion PUNTO_COMA 				{printf("asignacion OK \n\n");}
+		 	ID {		
+				strcpy(info_terceto_asig.posicion_b, yylval.str_val);
+			  } ASIG{
+				strcpy(info_terceto_asig.posicion_a, yytext);
+			  } expresion PUNTO_COMA{
+				strcpy(info_terceto_asig.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
+				crearTerceto(&info_terceto_asig);
+			  	printf("asignacion OK \n\n");}
+
 			|CONST ID OP_ASIG_IGUAL ENTERO PUNTO_COMA 	{ printf("CONST ID = ENTERO; -> OK\n\n");}
 			|CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA 	{ printf("CONST ID = REAL; -> OK\n\n");}
 			|CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA 	{ printf("CONST ID = STRING; -> OK\n\n");}
 			|ID OP_ASIG_IGUAL STRING PUNTO_COMA			{ printf(" ID = STRING; -> OK\n\n");}
-			
 
 expresion:
-		expresion MAS termino  		{printf("expresion -> exp + term OK \n\n");}
-		| expresion MENOS termino   {printf("expresion -> exp - term OK \n\n");}
-		| termino					{printf("expresion ->term OK \n\n");}
+		expresion MAS termino  		{printf("expresion -> exp + term OK \n\n");
+									strcpy(info_terceto_expresion.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
+									strcpy(info_terceto_expresion.posicion_a, "+");
+									strcpy(info_terceto_expresion.posicion_c, normalizarPunteroTerceto(p_terceto_termino));
+									p_terceto_expresion = crearTerceto(&info_terceto_expresion);}
+		| expresion MENOS termino   {printf("expresion -> exp - term OK \n\n");
+									strcpy(info_terceto_expresion.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
+									strcpy(info_terceto_expresion.posicion_a, "-");
+									strcpy(info_terceto_expresion.posicion_c, normalizarPunteroTerceto(p_terceto_termino));
+									p_terceto_expresion = crearTerceto(&info_terceto_expresion);}
+		| termino					{printf("expresion ->term OK \n\n");
+									p_terceto_expresion = p_terceto_termino;}
 
 termino: 
-		termino POR factor 			{printf("term -> term * factor OK \n\n");}
-		| termino DIVIDIDO factor   {printf("term -> term / factor OK \n\n");}
-		| factor					{printf("term -> factor OK \n\n");}
+		termino POR factor 			{printf("term -> term * factor OK \n\n");
+									strcpy(info_terceto_termino.posicion_b, normalizarPunteroTerceto(p_terceto_termino));
+									strcpy(info_terceto_termino.posicion_a, "*");
+									strcpy(info_terceto_termino.posicion_c, normalizarPunteroTerceto(p_terceto_factor));
+									p_terceto_termino = crearTerceto(&info_terceto_termino);}
+		| termino DIVIDIDO factor   {printf("term -> term / factor OK \n\n");
+									strcpy(info_terceto_termino.posicion_b, normalizarPunteroTerceto(p_terceto_termino));
+									strcpy(info_terceto_termino.posicion_a, "/");
+									strcpy(info_terceto_termino.posicion_c, normalizarPunteroTerceto(p_terceto_factor));
+									p_terceto_termino = crearTerceto(&info_terceto_termino);}
+		| factor					{printf("term -> factor OK \n\n");
+									p_terceto_termino = p_terceto_factor;}
 
-factor: ID 				 	{printf("factor -> ID OK\n\n");}
+factor: ID 				 	{printf("factor -> ID OK\n\n");
+							strcpy(info_terceto_factor.posicion_a, yytext);
+							strcpy(info_terceto_factor.posicion_b, "_");
+							strcpy(info_terceto_factor.posicion_c, "_");
+							p_terceto_factor = crearTerceto(&info_terceto_factor);}
 		|ENTERO 	 		{printf("factor -> Cte_entera OK\n\n");
+							strcpy(info_terceto_factor.posicion_a, yytext);
+							strcpy(info_terceto_factor.posicion_b, "_");
+							strcpy(info_terceto_factor.posicion_c, "_");
+							p_terceto_factor = crearTerceto(&info_terceto_factor);
 							strcpy(d.clave, yytext);
 							strcpy(d.valor, yytext);
 							strcpy(d.tipodato, "const Integer");
 							insertarEnTabla(&l_ts, &d);
 						}
 		|REAL 		 		{printf("factor -> Cte_Real OK\n\n");
+							strcpy(info_terceto_factor.posicion_a, yytext);
+							strcpy(info_terceto_factor.posicion_b, "_");
+							strcpy(info_terceto_factor.posicion_c, "_");
+							p_terceto_factor = crearTerceto(&info_terceto_factor);
 							strcpy(d.clave, yytext);
 							strcpy(d.valor, yytext);
 							strcpy(d.tipodato, "const Real");
 							insertarEnTabla(&l_ts, &d);
 						}
 		|STRING 	 		{printf("factor -> Cte_String OK\n\n");
+							strcpy(info_terceto_factor.posicion_a, yytext);
+							strcpy(info_terceto_factor.posicion_b, "_");
+							strcpy(info_terceto_factor.posicion_c, "_");
+							p_terceto_factor = crearTerceto(&info_terceto_factor);
 							strcpy(d.clave, yytext);
 							strcpy(d.valor, yytext);
 							strcpy(d.tipodato, "const String");
+							sprintf(d.longitud, "%d", strlen(yytext)-2);
 							insertarEnTabla(&l_ts, &d);
 						}
 		|PA expresion PC 	{printf("factor -> ( expresion ) OK\n\n");}
@@ -327,17 +436,39 @@ bloque_condicional:
 					{printf("bloque_condicional\n");}
 
 bloque_if: 
-		OP_IF condicion  bloque_programa  { printf("Condicion OK\n\n");} 
+		OP_IF condicion  bloque_programa  { info_cola_t terceto;
+											strcpy(terceto_if.posicion_b, "_");
+											strcpy(terceto_if.posicion_c, "_");
+											p_terceto_if=crearTerceto(&terceto_if);
+											if(sacar_de_pila(&comparaciones, &comparador) != PILA_VACIA) {
+											leerTerceto(comparacion.numero_terceto, &terceto);
+											// asignar al operador lógico el terceto al que debe saltar
+											strcpy(terceto.posicion_b, normalizarPunteroTerceto(p_terceto_if));
+											modificarTerceto(comparacion.numero_terceto, &terceto);
+											printf("Condicion OK\n\n");}} 
 		| OP_IF condicion   bloque_programa  ELSE  bloque_programa  {printf("Condicion con Else OK \n\n");}
 
 condicion:
 		 PA comparacion OP_AND comparacion PC {printf("Comparacion And OK\n\n");}
 		| PA comparacion OP_OR comparacion PC {printf("Comparacion OR OK\n\n");}
 		| PA OP_NOT condicion PC			  {printf("Comparacion NOT OK\n\n");} 	  
-		| PA comparacion PC 				  {printf("Comparacion -> OK\n\n");}	
+		| PA comparacion PC 				  {// crear terceto con el "CMP"		
+												crearTerceto(&terceto_cmp);
+												// crear terceto del operador de la comparación
+											   	strcpy(terceto_operador_logico.posicion_b, "_"); 
+												strcpy(terceto_operador_logico.posicion_c, "_");
+												// apilamos la posición del operador, para luego escribir a donde debe saltar el terceto por false
+												comparador.numero_terceto = crearTerceto(&terceto_operador_logico);
+												poner_en_pila(&comparaciones, &comparador);
+											   	printf("Comparacion -> OK\n\n");}	
 					
 comparacion : 
-		expresion MAYOR expresion			{printf("mayor  OK \n\n");}
+		expresion MAYOR {strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
+					// guardamos el operador para incertarlo luego de crear el terceto del "CMP"
+						strcpy(terceto_operador_logico.posicion_a, "BLE");
+						strcpy(terceto_cmp.posicion_a, "CMP");
+		} expresion	{strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));				
+					printf("mayor  OK \n\n");}
 		| expresion MENOR expresion			{printf("menor OK \n\n");}
 		| expresion MAYOR_IGUAL expresion 	{printf("mayor igual OK \n\n");}
 		| expresion MENOR_IGUAL expresion	{printf("menor igual OK \n\n");}
@@ -354,10 +485,15 @@ int main(int argc,char *argv[]){
 	}else {
 	
 		clear_ts();
+		clear_intermedia();
 		crear_lista(&l_ts);
 		crear_cola(&cola_tipo_id);
+		crear_cola(&cola_terceto);
+		crear_pila(&comparaciones);
+		crear_pila(&saltos_incondicionales);
 		yyparse();
 		crearTabla(&l_ts);
+		crear_intermedia(&cola_terceto);
 	}
 	fclose(yyin);
 	return 0;
@@ -518,4 +654,133 @@ int buscarEnTabla(char* nombre){
 	}
 	fclose(arch);
 	return 0;
+}
+
+
+
+
+
+
+
+
+
+int crearTerceto(info_cola_t *info_terceto) {
+	poner_en_cola(&cola_terceto, info_terceto);
+	return numero_terceto++;
+}
+
+char *normalizarPunteroTerceto(int terceto_puntero) {
+	char_puntero_terceto[0] = '\0';
+	sprintf(char_puntero_terceto, "[%d]", terceto_puntero);
+	return char_puntero_terceto;
+}
+
+// limpiar una intermedia de una ejecución anterior
+void clear_intermedia() {
+	FILE *arch=fopen("intermedia.txt","w");
+	fclose(arch);
+}
+
+void crear_intermedia(cola_t *cola_intermedia) {
+	info_t aux;
+	FILE *arch=fopen("intermedia.txt","w");
+	printf("\n");
+	printf("creando intermedia...\n");
+	guardar_intermedia(cola_intermedia, arch);
+	fclose(arch);
+	printf("intermedia creada\n");
+}
+
+void guardar_intermedia(cola_t *p, FILE *arch) {
+	int numero = NUMERO_INICIAL_TERCETO;
+	info_cola_t info_terceto;
+	while(sacar_de_cola(&cola_terceto, &info_terceto) != COLA_VACIA) {
+		if(strcmp(info_terceto.posicion_a, "THEN") == 0 || strcmp(info_terceto.posicion_a, "ELSE") == 0 ||
+		 strcmp(info_terceto.posicion_a, "ENDIF") == 0 || strcmp(info_terceto.posicion_a, "REPEAT") == 0 ||
+		  strcmp(info_terceto.posicion_a, "ENDREPEAT") == 0 || strcmp(info_terceto.posicion_a, "LISTA") == 0 ||
+		   strcmp(info_terceto.posicion_a, "ENDINLIST") == 0 || strcmp(info_terceto.posicion_a, "ENDFILTER") == 0
+		   || strcmp(info_terceto.posicion_a, "COMPARACION") == 0 || strcmp(info_terceto.posicion_a, "RETURN_TRUE") == 0) {
+
+			printf("[%d](%s_%d,%s,%s)\n", numero,info_terceto.posicion_a, numero, info_terceto.posicion_b ,info_terceto.posicion_c);
+			fprintf(arch,"[%d](%s_%d,%s,%s)\n", numero, info_terceto.posicion_a, numero, info_terceto.posicion_b ,info_terceto.posicion_c);
+			numero++;
+		}
+		else {
+			printf("[%d](%s,%s,%s)\n", numero,info_terceto.posicion_a ,info_terceto.posicion_b ,info_terceto.posicion_c);
+			fprintf(arch,"[%d](%s,%s,%s)\n", numero++, info_terceto.posicion_a ,info_terceto.posicion_b ,info_terceto.posicion_c);
+		}
+	}
+	cant_total_tercetos=numero;
+}
+
+void leerTerceto(int numero_terceto, info_cola_t *info_terceto_output) {
+	int index = NUMERO_INICIAL_TERCETO;
+	cola_t aux;
+	info_cola_t info_aux;
+	
+	crear_cola(&aux);
+	while(sacar_de_cola(&cola_terceto, &info_aux) != COLA_VACIA) {
+		poner_en_cola(&aux, &info_aux);
+		if(index == numero_terceto) {
+			// encontramos el terceto buscado
+			strcpy(info_terceto_output->posicion_a, info_aux.posicion_a);
+			strcpy(info_terceto_output->posicion_b, info_aux.posicion_b);
+			strcpy(info_terceto_output->posicion_c, info_aux.posicion_c);
+		}
+		index++;
+	}
+	while(sacar_de_cola(&aux, &info_aux) != COLA_VACIA) {
+		poner_en_cola(&cola_terceto, &info_aux);
+	}
+}
+
+void modificarTerceto(int numero_terceto, info_cola_t *info_terceto_input) {
+	int index = NUMERO_INICIAL_TERCETO;
+	cola_t aux;
+	info_cola_t info_aux;
+	
+	crear_cola(&aux);
+	while(sacar_de_cola(&cola_terceto, &info_aux) != COLA_VACIA) {
+		if(index == numero_terceto) {
+			poner_en_cola(&aux, info_terceto_input);
+		} else {
+			poner_en_cola(&aux, &info_aux);
+		}
+		index++;
+	}
+	while(sacar_de_cola(&aux, &info_aux) != COLA_VACIA) {
+		poner_en_cola(&cola_terceto, &info_aux);
+	}
+}
+
+void crear_pila(pila_t *p) {
+	*p=NULL;
+}
+
+int poner_en_pila(pila_t *p, info_pila_t *d) {
+	nodo_pila_t *nue=(nodo_pila_t*)malloc(sizeof(nodo_pila_t));
+
+	if(nue==NULL)
+		return SIN_MEMORIA;
+
+	nue->info=*d;
+	nue->sig=*p;
+	*p=nue;
+
+	return TODO_BIEN;
+}
+
+
+int sacar_de_pila(pila_t *p, info_pila_t *d) {
+	nodo_pila_t *aux;
+
+	if(*p==NULL)
+		return PILA_VACIA;
+
+	aux=*p;
+	*d=aux->info;
+	*p=aux->sig;
+	free(aux);
+
+	return TODO_BIEN;
 }
