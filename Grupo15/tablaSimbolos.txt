@@ -1,2 +1,15 @@
-NOMBRE         TIPO      VALOR          LONGITUD  
-
+NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
+suma                                Float                                                                                   
+promedio                            Float                                                                                   
+contador                            Integer                                                                                 
+actual                              Float                                                                                   
+92                                  const Integer    92                                                                     
+52                                  const Integer    52                                                                     
+4                                   const Integer    4                                                                      
+256                                 const Integer    256                                                                    
+2                                   const Integer    2                                                                      
+1                                   const Integer    1                                                                      
+02.5                                const Real       02.5                                                                   
+0.342                               const Real       0.342                                                                  
+0                                   const Integer    0                                                                      
+                                                                                                                            

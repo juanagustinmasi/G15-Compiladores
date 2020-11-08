@@ -7,7 +7,7 @@
 
     #define LIMITE_REAL 2147483647
     #define LIMITE_ENTERO 32768
-    #define LIMITE_CADENA 30
+    #define LIMITE_CADENA 300
     #define LIMITE_ID 30
 
 	int error(char* mensaje);
@@ -88,7 +88,6 @@ ESPACIO     " "
 {ID}						{
 								if(strlen(yytext) <= 30){
 									yylval.str_val = strdup(yytext);
-									insertarEnTabla(normalizar(yytext), "ID", yytext, "");
 									return ID;
 								}
 								error("Superaste el tamanio maximo permitido para ids" );
@@ -100,7 +99,6 @@ ESPACIO     " "
 {REAL}					{
 								if(atof(yytext)<=3.40282347e+38F){
 									yylval.float_val = atof(yytext);
-									insertarEnTabla(normalizar(yytext), "REAL", yytext, "");
 									return REAL;
 								}
 								error("Superaste el tamanio maximo permitido para float");
@@ -110,7 +108,6 @@ ESPACIO     " "
 {ENTERO}					{
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
-									insertarEnTabla(normalizar(yytext), "ENTERO", yytext, "");
 									return ENTERO;
 								}
 								error("Superaste el tamanio maximo permitido para enteros.");
@@ -125,7 +122,6 @@ ESPACIO     " "
 							sprintf(auxS,"%s", yytext);
 							quitarComillas();
 							yylval.str_val=auxS; 
-							insertarEnTabla(normalizar(yytext), "STRING", yytext, auxS);
 							return STRING;
 							}
 
