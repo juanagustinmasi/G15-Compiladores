@@ -333,9 +333,9 @@ bloque_if:
 condicion:
 		 PA comparacion OP_AND comparacion PC {printf("Comparacion And OK\n\n");}
 		| PA comparacion OP_OR comparacion PC {printf("Comparacion OR OK\n\n");}
-		| PA OP_NOT condicion PC			  {printf("Comparacion NOT OK\n\n");} 	
+		| PA OP_NOT condicion PC			  {printf("Comparacion NOT OK\n\n");} 	  
 		| PA comparacion PC 				  {printf("Comparacion -> OK\n\n");}	
-			
+					
 comparacion : 
 		expresion MAYOR expresion			{printf("mayor  OK \n\n");}
 		| expresion MENOR expresion			{printf("menor OK \n\n");}
