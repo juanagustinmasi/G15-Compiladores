@@ -17,8 +17,14 @@ void error(char *mensaje);
 
 /* -------- TABLA DE SIMBOLOS -------- */
 
+#define SIN_MEMORIA 0
+#define DATO_DUPLICADO 0
+#define TODO_BIEN 1
+#define PILA_VACIA 0
+#define COLA_VACIA 0
 #define TAM_TABLA 300
 #define TAM_NOMBRE 100
+#define TAM 35
 #define TAM_VALOR 100
 #define TAM_TIPO 50
 #define CAD_MAX 50
@@ -27,20 +33,60 @@ void error(char *mensaje);
 
 typedef struct
 {
-	char nombre [TAM_NOMBRE];
-	char tipo  [TAM_TIPO];
-	char valor [TAM_VALOR];
-	int longitud;
-} structTablaS;
+	char clave[TAM_NOMBRE];
+	char tipodato[TAM_TIPO];
+	char valor[TAM_VALOR];
+	char longitud[TAM];
+} info_t;
 
-structTablaS tablaSimbolos[TAM_TABLA];
+typedef struct sNodo
+{
+			info_t info;
+			struct sNodo *sig;
+} nodo_t;
+
+typedef nodo_t *lista_t;
+
+typedef struct
+	{
+		char descripcion[TAM];
+		char posicion_a[TAM];
+		char posicion_b[TAM];
+		char posicion_c[TAM];
+	} info_cola_t;
+
+	typedef struct sNodoCola
+	{
+		info_cola_t info;
+		struct sNodoCola *sig;
+	} nodo_cola_t;
+
+	typedef struct
+	{
+		nodo_cola_t *pri, *ult;
+	} cola_t;
+
+
+lista_t l_ts;
+info_t d;
+cola_t cola_tipo_id;
+info_cola_t info_tipo_id;
 
 /* PROTOTIPOS */
 
-void crearTabla();
-void insertarEnTabla(char*, char*, char*, char*);
-void guardarEnTabla(char* nombre, char* tipo, char* valor, char* longitud);
+void crear_cola(cola_t *c);
+int poner_en_cola(cola_t *c, info_cola_t *d);
+int sacar_de_cola(cola_t *c, info_cola_t *d);
+void crearTabla(lista_t *l_ts);
+void clear_ts();
+int insertarEnTabla(lista_t *l_ts, info_t *d);
+int insertar_en_orden(lista_t *p, info_t *d);
+int sacar_repetidos(lista_t *p, info_t *d, int (*cmp)(info_t*d1, info_t*d2), int elimtodos);
+//void guardarEnTabla(char* nombre, char* tipo, char* valor, char* longitud);
 int buscarEnTabla(char* nombre);
+void crear_lista(lista_t *p);
+void guardar_lista(lista_t *p, FILE *arch);
+int comparar(info_t*d1, info_t*d2);
 
 /* VARIABLES */
 
@@ -137,6 +183,9 @@ lista_definiciones:
 definicion: 
 		ID 
                 {   printf("%s\n", yylval.str_val);
+					strcpy(info_tipo_id.descripcion, yyval.str_val);
+					poner_en_cola(&cola_tipo_id, &info_tipo_id);
+					insertarEnTabla(&l_ts, &d);
 					printf("definicion OK\n");
 				};
 
@@ -144,21 +193,49 @@ definicion:
 
 lista_tipo_dato: 
 
-	 lista_tipo_dato COMA TIPO_ENTERO{ printf("lista tipo dato, ENTERO OK\n\n");}
+	 lista_tipo_dato COMA TIPO_ENTERO{ printf("lista tipo dato, ENTERO OK\n\n");
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "Integer");
+		 insertarEnTabla(&l_ts, &d);}
 	
-	| lista_tipo_dato COMA TIPO_REAL{ printf("lista tipo dato, REAL OK\n\n");} 
-	| lista_tipo_dato COMA TIPO_STRING{ printf("lista tipo dato, STRING OK\n\n");} 
+	| lista_tipo_dato COMA TIPO_REAL{ printf("lista tipo dato, REAL OK\n\n");
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "Float");
+//		 printf("__%s,%s__",d.clave,d.tipodato);
+		 insertarEnTabla(&l_ts, &d);
+		}
+
+	| lista_tipo_dato COMA TIPO_STRING{ printf("lista tipo dato, STRING OK\n\n");
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "String");
+		 insertarEnTabla(&l_ts, &d);}  
   	|TIPO_ENTERO       
 		{
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "Integer");
+//		 printf("__%s,%s__",d.clave,d.tipodato);
+		 insertarEnTabla(&l_ts, &d);
 		printf("TIPO_ENTERO en tipo_variable OK\n");
 		}
-  	|TIPO_REAL 
+  	|TIPO_REAL  
 		{
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "Float");
+		insertarEnTabla(&l_ts, &d);
 		printf("TIPO_REAL en tipo_variable OK\n");
 		}
 	|TIPO_STRING
 		{
-			printf("TIPO_STRING en tipo_variable OK \n");
+		 sacar_de_cola(&cola_tipo_id, &info_tipo_id);
+		 strcpy(d.clave, info_tipo_id.descripcion);
+		 strcpy(d.tipodato, "String");
+		insertarEnTabla(&l_ts, &d);
+		printf("TIPO_STRING en tipo_variable OK \n");
 		}	
 
 
@@ -190,7 +267,6 @@ salida_datos:
 		| PUT CA TIPO_STRING CC PUNTO_COMA
 			{printf("PRINT CUALQUIER TEXTO OK\n");}
 			
-			
 		
 
 bloque_iteracion:
@@ -203,6 +279,7 @@ asignacion:
 			|CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA 	{ printf("CONST ID = REAL; -> OK\n\n");}
 			|CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA 	{ printf("CONST ID = STRING; -> OK\n\n");}
 			|ID OP_ASIG_IGUAL STRING PUNTO_COMA			{ printf(" ID = STRING; -> OK\n\n");}
+			
 
 expresion:
 		expresion MAS termino  		{printf("expresion -> exp + term OK \n\n");}
@@ -215,9 +292,24 @@ termino:
 		| factor					{printf("term -> factor OK \n\n");}
 
 factor: ID 				 	{printf("factor -> ID OK\n\n");}
-		|ENTERO 	 		{printf("factor -> Cte_entera OK\n\n");}
-		|REAL 		 		{printf("factor -> Cte_Real OK\n\n");}
-		|STRING 	 		{printf("factor -> Cte_String OK\n\n");}
+		|ENTERO 	 		{printf("factor -> Cte_entera OK\n\n");
+							strcpy(d.clave, yytext);
+							strcpy(d.valor, yytext);
+							strcpy(d.tipodato, "const Integer");
+							insertarEnTabla(&l_ts, &d);
+						}
+		|REAL 		 		{printf("factor -> Cte_Real OK\n\n");
+							strcpy(d.clave, yytext);
+							strcpy(d.valor, yytext);
+							strcpy(d.tipodato, "const Real");
+							insertarEnTabla(&l_ts, &d);
+						}
+		|STRING 	 		{printf("factor -> Cte_String OK\n\n");
+							strcpy(d.clave, yytext);
+							strcpy(d.valor, yytext);
+							strcpy(d.tipodato, "const String");
+							insertarEnTabla(&l_ts, &d);
+						}
 		|PA expresion PC 	{printf("factor -> ( expresion ) OK\n\n");}
 		|funcion_contar 	{printf("funcion_contar -> contar OK \n\n");}
 
@@ -260,12 +352,20 @@ int main(int argc,char *argv[]){
 	if ((yyin = fopen(argv[1], "rt")) == NULL){
 		printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
 	}else {
-		
+	
+		clear_ts();
+		crear_lista(&l_ts);
+		crear_cola(&cola_tipo_id);
 		yyparse();
-		crearTabla();
+		crearTabla(&l_ts);
 	}
 	fclose(yyin);
 	return 0;
+}
+
+void clear_ts() {
+	FILE *arch=fopen("ts.txt","w");
+	fclose(arch);
 }
 
 void error(char *mensaje) {
@@ -279,45 +379,123 @@ int yyerror(void){
 	exit (1);
 }
 
-void crearTabla(){
-	if(cantTokens == -1)
-	yyerror();
+void crear_cola(cola_t *c) {
+	c->pri=NULL;
+	c->ult=NULL;
+}
 
-	FILE* arch = fopen("tablaSimbolos.txt", "w+");
-	if(!arch){
-		printf("No pude crear el archivo tablaSimbolos.txt\n");
-		return;
-	}
+int poner_en_cola(cola_t *c, info_cola_t *d) {
+	nodo_cola_t *nue=(nodo_cola_t*)malloc(sizeof(nodo_cola_t));
 
-	fprintf(arch,"%-15s%-10s%-15s%-10s\n","NOMBRE","TIPO","VALOR", "LONGITUD");
-	fprintf(arch, "\n");
+	if(nue==NULL)
+		return SIN_MEMORIA;
 
+	nue->info=*d;
+	nue->sig=NULL;
+	if(c->ult==NULL)
+		c->pri=nue;
+	else
+		c->ult->sig=nue;
+
+	c->ult=nue;
+
+	return TODO_BIEN;
+}
+
+int sacar_de_cola(cola_t *c, info_cola_t *d) {
+	nodo_cola_t *aux;
+
+	if(c->pri==NULL)
+		return COLA_VACIA;
+
+	aux=c->pri;
+	*d=aux->info;
+	c->pri=aux->sig;
+	free(aux);
+
+	if(c->pri==NULL)
+		c->ult=NULL;
+
+	return TODO_BIEN;
+}
+
+void crear_lista(lista_t *p) {
+    *p=NULL;
+}
+
+void crearTabla(lista_t *p) {
+	info_t aux;
+	FILE *arch=fopen("tablaSimbolos.txt","w");
+	printf("\n");
+	printf("creando tabla de simbolos...\n");
+	guardar_lista(p, arch);
 	fclose(arch);
+	printf("tabla de simbolos creada\n");
 }
 
-void insertarEnTabla(char* nombre, char* tipo, char* valor, char* longitud){
-	if (buscarEnTabla(nombre) == 1)
-	{
-		guardarEnTabla(nombre, tipo, valor, longitud);
+int insertarEnTabla(lista_t *l_ts, info_t *d) {
+	insertar_en_orden(l_ts,d);
+	sacar_repetidos(l_ts,d,comparar,0);
+	strcpy(d->clave,"\0");
+	strcpy(d->tipodato,"\0");
+	strcpy(d->valor,"\0");
+	strcpy(d->longitud,"\0");
+}
+
+int insertar_en_orden(lista_t *p, info_t *d) {
+	nodo_t*nue;
+	while(*p && comparar(&(*p)->info,d)>0)
+			p=&(*p)->sig;
+
+	if(*p && (((*p)->info.clave)-(d->clave))==0) {
+		(*p)->info=(*d);
+		return DATO_DUPLICADO;
 	}
+
+	nue=(nodo_t*)malloc(sizeof(nodo_t));
+	if(nue==NULL)
+			return SIN_MEMORIA;
+
+	nue->info=*d;
+	nue->sig=*p;
+	*p=nue;
+	return TODO_BIEN;
 }
 
-void guardarEnTabla(char* nombre, char* tipo, char* valor, char* longitud)
-{
-    FILE *arch = fopen("tablaSimbolos.txt", "r+");
-    if (!arch)
-    {
-        arch = fopen("tablaSimbolos.txt", "w+");
-        crearTabla(arch);
-        fprintf(arch, "%-15s%-10s%-15s%-10d\n", &(tablaSimbolos[i].nombre), &(tablaSimbolos[i].tipo) , &(tablaSimbolos[i].valor), tablaSimbolos[i].longitud);
-        fclose(arch);
-    }
-    else
-    {
-    	fprintf(arch, "%-15s%-10s%-15s%-10d\n", &(tablaSimbolos[i].nombre), &(tablaSimbolos[i].tipo) , &(tablaSimbolos[i].valor), tablaSimbolos[i].longitud);
+int sacar_repetidos(lista_t *p, info_t *d, int (*cmp)(info_t*d1, info_t*d2), int elimtodos) {
+	nodo_t*aux;
+	lista_t*q;
 
-        fclose(arch);
-    }
+	while(*p) {
+		q=&(*p)->sig;
+		while(*p && *q) {
+			if(cmp(&(*p)->info,&(*q)->info)==0) {
+				aux=*q;
+				*q=aux->sig;
+				free(aux);
+			} else
+				q=&(*q)->sig;
+		}
+		p=&(*p)->sig;
+	}
+
+	return TODO_BIEN;
+}
+
+void guardar_lista(lista_t *p, FILE *arch) {
+	// titulos
+	fprintf(arch,"%-35s %-16s %-35s %-35s", "NOMBRE", "TIPO DE DATO", "VALOR", "LONGITUD");	
+	// datos
+	while(*p) {
+		printf("\n%s %s %s %s\n", (*p)->info.clave, (*p)->info.tipodato, (*p)->info.valor, (*p)->info.longitud);
+		fprintf(arch,"\n%-35s %-16s %-35s %-35s", (*p)->info.clave, (*p)->info.tipodato, (*p)->info.valor, (*p)->info.longitud);
+		p=&(*p)->sig;
+	}
+
+}
+
+int comparar(info_t *d1, info_t *d2) {
+	return strcmp(d1->clave,d2->clave);
 }
 
 int buscarEnTabla(char* nombre){
