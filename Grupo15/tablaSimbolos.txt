@@ -1,5 +1,6 @@
 NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
 actual                              Integer                                                                                 
-2                                   const Integer    2                                                                      
+6                                   const Integer    6                                                                      
+4                                   const Integer    4                                                                      
 1                                   const Integer    1                                                                      
                                                                                                                             
