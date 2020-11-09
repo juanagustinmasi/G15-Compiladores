@@ -350,10 +350,40 @@ asignacion:
 				crearTerceto(&info_terceto_asig);
 			  	printf("asignacion OK \n\n");}
 
-			|CONST ID OP_ASIG_IGUAL ENTERO PUNTO_COMA 	{ printf("CONST ID = ENTERO; -> OK\n\n");}
-			|CONST ID OP_ASIG_IGUAL REAL PUNTO_COMA 	{ printf("CONST ID = REAL; -> OK\n\n");}
-			|CONST ID OP_ASIG_IGUAL STRING PUNTO_COMA 	{ printf("CONST ID = STRING; -> OK\n\n");}
-			|ID OP_ASIG_IGUAL STRING PUNTO_COMA			{ printf(" ID = STRING; -> OK\n\n");}
+			|CONST ID OP_ASIG_IGUAL {
+												strcpy(info_terceto_asig.posicion_b, $<str_val>2);
+			} ENTERO  	{ 
+													strcpy(info_terceto_asig.posicion_a, "=");
+													strcpy(info_terceto_asig.posicion_c, yytext);
+													crearTerceto(&info_terceto_asig);
+														printf("CONST ID = ENTERO; -> OK\n\n");
+															}
+			PUNTO_COMA{};
+			|CONST ID OP_ASIG_IGUAL {
+												strcpy(info_terceto_asig.posicion_b, $<str_val>2);
+			} REAL 	{ 
+											   strcpy(info_terceto_asig.posicion_a, "=");
+											   strcpy(info_terceto_asig.posicion_c, yytext);
+											   crearTerceto(&info_terceto_asig);
+											   printf("CONST ID = REAL; -> OK\n\n");}
+			PUNTO_COMA{};
+			|CONST ID OP_ASIG_IGUAL {
+												strcpy(info_terceto_asig.posicion_b, $<str_val>2);
+			}STRING  	{ 
+												strcpy(info_terceto_asig.posicion_a, "=");
+												strcpy(info_terceto_asig.posicion_c, yytext);
+												crearTerceto(&info_terceto_asig);
+												printf("CONST ID = STRING; -> OK\n\n");}
+			PUNTO_COMA{};
+			|ID OP_ASIG_IGUAL {
+												strcpy(info_terceto_asig.posicion_b, $<str_val>2);
+			}STRING 	{ 
+				
+												strcpy(info_terceto_asig.posicion_a, "=");
+												strcpy(info_terceto_asig.posicion_c, yytext);
+												crearTerceto(&info_terceto_asig);
+												printf(" ID = STRING; -> OK\n\n");}
+			PUNTO_COMA{};
 
 expresion:
 		expresion MAS termino  		{printf("expresion -> exp + term OK \n\n");
@@ -439,8 +469,8 @@ bloque_if:
 		OP_IF condicion  bloque_programa  { info_cola_t terceto;
 											strcpy(terceto_if.posicion_b, "_");
 											strcpy(terceto_if.posicion_c, "_");
-											p_terceto_if=crearTerceto(&terceto_if);
-											if(sacar_de_pila(&comparaciones, &comparador) != PILA_VACIA) {
+											crearTerceto(&terceto_if);
+											if(sacar_de_pila(&comparaciones, &comparacion) != PILA_VACIA) {
 											leerTerceto(comparacion.numero_terceto, &terceto);
 											// asignar al operador lógico el terceto al que debe saltar
 											strcpy(terceto.posicion_b, normalizarPunteroTerceto(p_terceto_if));
