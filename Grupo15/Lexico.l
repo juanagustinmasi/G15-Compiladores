@@ -1,8 +1,10 @@
 %{
 	#include <stdio.h>
+	#include <stdbool.h>
 	#include <stdlib.h>
-	#include <conio.h>
 	#include <string.h>
+	#include <math.h>
+	#include <errno.h>
 	#include "y.tab.h"
 
     #define LIMITE_REAL 2147483647
@@ -12,6 +14,7 @@
 
 	int error(char* mensaje);
 	int validarLongitudCadena();
+	void validar_constante_string(char *);
 	void quitarComillas();
 	char* normalizar(char*);
 	FILE  *yyin;
@@ -25,12 +28,12 @@
 
 DIGITO 	[0-9]
 LETRA 	[a-zA-ZñÑ]
-ID		{LETRA}({LETRA}|{DIGITO})*
+ID		{LETRA}({LETRA}|{DIGITO}|_)*
 ENTERO		{DIGITO}+
 REAL	{DIGITO}+"."{DIGITO}*|{DIGITO}*"."{DIGITO}+
-CUALQUIERA	{LETRA}|{DIGITO}|.
-STRING	\"[^"\n]*\"
-CARACTER ({DIGITO}|{LETRA}|{CUALQUIERA}|.|_)+
+SIMBOLO	[@|%]
+STRING	\"(({LETRA}|{DIGITO}|[^"\n]){0,30})\"
+CARACTER ({DIGITO}|{LETRA}|{SIMBOLO}|.|_)+
 COMENTARIO_I "*-"
 COMENTARIO_F "-*"
 COMENTARIO_SIMPLE {COMENTARIO_I}({CARACTER}|[\r\n])*{COMENTARIO_F}
@@ -71,7 +74,7 @@ ESPACIO     " "
 ">="						{ return MAYOR_IGUAL;}
 "=="						{ return IGUAL;}
 "<>"						{ return DISTINTO;}
-"not"						{ return NOT;}
+
 
  /* Otros simbolos */
 "("							{ return PA;}
@@ -115,13 +118,7 @@ ESPACIO     " "
 
 
 {STRING}				{
-						if(validarLongitudCadena() == 0) {
-								sprintf(mensajeDeError, "Cadena %s excede los %d caracteres de longitud.", yytext, LIMITE_CADENA);
-				 				error(mensajeDeError);
-							}
-							sprintf(auxS,"%s", yytext);
-							quitarComillas();
-							yylval.str_val=auxS; 
+						validar_constante_string(yytext);
 							return STRING;
 							}
 
@@ -157,4 +154,17 @@ char* normalizar(char* cadena)
 	strcpy(aux,"_");
 	strcat(aux,cadena);
 	return aux;
+}
+
+
+void validar_constante_string(char *constante_string) {
+	int length = 0;
+	while(constante_string[length] != '\0') {			
+		length++;
+	}
+	// mayor a 32 se pone porque las comillas de la constante no cuentan para su tamaño
+	if(length > LIMITE_CADENA + 2) {
+		sprintf(mensajeDeError, "la constante string %s supera los [%d] caracteres permitidos\n", constante_string, LIMITE_CADENA);
+		error(mensajeDeError);
+	}
 }

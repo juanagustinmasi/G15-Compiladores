@@ -1,0 +1,10 @@
+DIM < contador ,promedio,actual,suma,cad> AS < Integer ,Float,Float,Float,String>
+if (actual>2 or actual <> 0){
+PUT "actual es > que 2 y <> de 0";
+}
+Else
+{
+if (not( actual > 2)){
+PUT "no es mayor que 2";
+}
+}

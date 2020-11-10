@@ -1,0 +1,10 @@
+DIM <chau2,chau,chau1,chau3> AS <Float,String,Integer,Float>
+
+chau : "afasfasfasf";
+GET chau;
+PUT chau;
+PUT "Hola como te va";
+CONST chau1=3;
+CONST chau3=0.3;
+CONST chau="asfasfasfa";
+chau="asfasfasfa";
