@@ -1,8 +1,8 @@
 flex ../Lexico.l
 bison -dyv ../sintactico.y
-gcc lex.yy.c y.tab.c -o programa.exe
+gcc lex.yy.c y.tab.c -o segunda.exe
 pause
-programa.exe prueba--IF.txt
+segunda.exe prueba--IF.txt
 del lex.yy.c
 del y.tab.c
 del y.output
