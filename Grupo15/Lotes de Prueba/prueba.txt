@@ -2,7 +2,7 @@ DIM < contador ,promedio,actual,suma,cad> AS < Integer ,Float,Float,Float,String
 cad = "asdakjshda";
 PUT cad;
 CONST nombre=80;
-PUT "Prueba.txt LyC Tema 4! asdasdasdasdasdasdasda";
+PUT "Prueba.txt LyC Tema 4";
 PUT "Ingrese entero para actual: ";
 GET actual;
 contador: 0;

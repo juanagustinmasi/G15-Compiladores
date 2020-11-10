@@ -16,7 +16,7 @@ _0                                  const Integer    0
 _"no_es_mayor_que_2"                const String     "no_es_mayor_que_2"                 17                                 
 _"asdakjshda"                       const String     "asdakjshda"                        10                                 
 _"actual_es_>_2_y_<>_0"             const String     "actual_es_>_2_y_<>_0"              20                                 
-_"Prueba.txt_LyC_Tema_4!"           const String     "Prueba.txt_LyC_Tema_4!"            22                                 
+_"Prueba.txt_LyC_Tema_4"            const String     "Prueba.txt_LyC_Tema_4"             21                                 
 _"La_suma_es:_"                     const String     "La_suma_es:_"                      12                                 
 _"Ingrese_entero_para_actual:_"     const String     "Ingrese_entero_para_actual:_"      28                                 
                                                                                                                             
