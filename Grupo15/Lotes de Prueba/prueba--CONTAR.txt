@@ -1,0 +1,3 @@
+DIM <actual,suma> AS <Float,Integer>
+
+actual: contar (128;[256,128]);

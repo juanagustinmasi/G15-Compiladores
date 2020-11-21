@@ -32,6 +32,7 @@ void error(char *mensaje);
 #define TAM_LINEA 300
 #define TAM_NOMB_LINEA 100
 #define NUMERO_INICIAL_TERCETO 10
+#define __CONTAR_CONTADOR "__CONTAR_CONTADOR"
 
 typedef struct
 {
@@ -95,6 +96,8 @@ info_cola_t info_terceto_termino;
 info_cola_t info_terceto_expresion;
 info_cola_t terceto_if;
 info_cola_t terceto_cmp;
+info_cola_t terceto_contar;
+
 info_cola_t	terceto_operador_logico;
 pila_t comparaciones;
 info_pila_t comparador;
@@ -151,8 +154,9 @@ int p_terceto_expresion;
 int p_terceto_termino;
 int p_terceto_factor;
 int p_terceto_if;
-
-
+int p_terceto_contar;
+int p_contar_pivot;
+int p_contar;
 
 %}
 
@@ -330,7 +334,7 @@ sentencia :
 		| bloque_iteracion 		{printf("sentencia -> bloque_iteracion OK \n\n");}
 		| entrada_datos			{printf("sentencia -> entrada_datos OK \n\n");}
 		| salida_datos			{printf("sentencia -> salida_datos OK \n\n");}
-		
+		| funcion_contar 		{printf("sentencia -> contar OK \n\n");}
 entrada_datos: 
 		GET ID PUNTO_COMA 
 			{printf("GET ID -> OK \n\n");
@@ -497,16 +501,91 @@ factor: ID 				 	{printf("factor -> ID OK\n\n");
 							}
 		|funcion_contar 	{
 							printf("funcion_contar -> contar OK \n\n");
-							//p_terceto_factor = p_terceto_contar;
+							strcpy(info_terceto_factor.posicion_a, "__CONTAR_CONTADOR");
+							strcpy(info_terceto_factor.posicion_b, "_");
+							strcpy(info_terceto_factor.posicion_c, "_");
+							
+							p_terceto_factor = p_terceto_contar;
 							}
 
 
 funcion_contar:
-		CONTAR PA expresion PUNTO_COMA CA lista_expresiones CC PC {printf("Funcion contar -> OK");}
+		CONTAR {
+			// si el ID está en las lista "__IGUALES_RETURN" suma 1, si no suma 0
+			strcpy(d.clave, __CONTAR_CONTADOR);
+			strcpy(d.tipodato, "Integer");
+	//		strcpy(d.valor, "0");
+			insertarEnTabla(&l_ts, &d);
+			// inicializar __CONTAR_CONTADOR en cero
+		//	crearTerceto(&terceto_cmp);
+			strcpy(terceto_contar.posicion_a, ":=");
+			strcpy(terceto_contar.posicion_b, __CONTAR_CONTADOR);
+			strcpy(terceto_contar.posicion_c, "0");
+			crearTerceto(&terceto_contar);}
+			
+
+		PA expresion {p_contar_pivot = p_terceto_expresion;
+					
+							printf("___%d___PUNTERO__",p_terceto_expresion);
+								} PUNTO_COMA 
+		CA lista_expresiones CC PC {
+						//		strcpy(info_terceto_factor.posicion_a, "__CONTAR_CONTADOR");
+						//		strcpy(info_terceto_factor.posicion_b, "_");
+						//		strcpy(info_terceto_factor.posicion_c, "_");	
+						//	crearTerceto(&terceto_contar);				
+			//					p_terceto_contar = crearTerceto(&terceto_contar);
+								printf("Funcion contar -> OK");}
 
 lista_expresiones:
-		lista_expresiones COMA expresion { printf("expresion -> expresion , expresion OK\n\n");}
-		|expresion	{printf("expresion -> expresion OK\n\n");}
+		lista_expresiones COMA expresion {  strcpy(terceto_contar.posicion_a, "CMP");
+			strcpy(terceto_contar.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
+			strcpy(terceto_contar.posicion_c, normalizarPunteroTerceto(p_contar_pivot));
+			
+			strcpy(terceto_contar.posicion_b, normalizarPunteroTerceto(crearTerceto(&terceto_contar)+4));
+			strcpy(terceto_contar.posicion_a, "BNE");
+			strcpy(terceto_contar.posicion_c, "_");
+			crearTerceto(&terceto_contar);
+			
+			strcpy(terceto_contar.posicion_a, "+");
+			strcpy(terceto_contar.posicion_b, __CONTAR_CONTADOR);
+			strcpy(terceto_contar.posicion_c, "1");
+
+			strcpy(terceto_contar.posicion_c, normalizarPunteroTerceto(crearTerceto(&terceto_contar)));
+			strcpy(terceto_contar.posicion_a, ":=");
+			strcpy(terceto_contar.posicion_b, __CONTAR_CONTADOR);
+			p_terceto_contar = crearTerceto(&terceto_contar);
+
+//			strcpy(terceto_contar.posicion_a, "COMPARACION");
+//			strcpy(terceto_contar.posicion_c, "_");
+//			strcpy(terceto_contar.posicion_b, "_");
+//			crearTerceto(&terceto_contar);
+											
+			printf("expresion -> expresion , expresion OK\n\n");}
+
+		|expresion {  strcpy(terceto_contar.posicion_a, "CMP");
+			strcpy(terceto_contar.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
+			strcpy(terceto_contar.posicion_c, normalizarPunteroTerceto(p_contar_pivot));
+			
+			strcpy(terceto_contar.posicion_b, normalizarPunteroTerceto(crearTerceto(&terceto_contar)+4));
+			strcpy(terceto_contar.posicion_a, "BNE");
+			strcpy(terceto_contar.posicion_c, "_");
+			crearTerceto(&terceto_contar);
+			
+			strcpy(terceto_contar.posicion_a, "+");
+			strcpy(terceto_contar.posicion_b, __CONTAR_CONTADOR);
+			strcpy(terceto_contar.posicion_c, "1");
+
+			strcpy(terceto_contar.posicion_c, normalizarPunteroTerceto(crearTerceto(&terceto_contar)));
+			strcpy(terceto_contar.posicion_a, ":=");
+			strcpy(terceto_contar.posicion_b, __CONTAR_CONTADOR);
+			p_terceto_contar = crearTerceto(&terceto_contar);
+
+		//	strcpy(terceto_contar.posicion_a, "COMPARACION");
+		//	strcpy(terceto_contar.posicion_c, "_");
+		//	strcpy(terceto_contar.posicion_b, "_");
+		//	crearTerceto(&terceto_contar);
+
+			printf("expresion -> expresion OK\n\n");}
 
 
 bloque_condicional: 
@@ -569,7 +648,7 @@ condicion:
 			// apilamos la posición del operador, para luego escribir donde debe saltar por false
 			comparacion_or.numero_terceto = crearTerceto(&terceto_operador_logico);
 			poner_en_pila(&comparaciones_or, &comparacion_or);
-			 printf("Comparacion OR OK\n\n");}
+			 printf("Condicion compuesta OR OK\n\n");}
 		 OP_OR comparacion PC{// crear terceto con el "CMP"
 			crearTerceto(&terceto_cmp);
 			// crear terceto del operador de la comparación
@@ -578,8 +657,8 @@ condicion:
 			// apilamos la posición del operador, para luego escribir a donde debe saltar por false
 			comparador.numero_terceto = crearTerceto(&terceto_operador_logico);
 			poner_en_pila(&comparaciones, &comparador);}
-		| PA comparacion OP_AND comparacion PC {printf("Comparacion And OK\n\n");}
-		| PA OP_NOT condicion PC			  {printf("Comparacion NOT OK\n\n");} 	  
+		| PA comparacion OP_AND comparacion PC {printf("Condicion compuesta And OK\n\n");}
+		| PA OP_NOT condicion PC			  {printf("Condicion compuesta NOT OK\n\n");} 	  
 		| PA comparacion PC 				  {// crear terceto con el "CMP"		
 												crearTerceto(&terceto_cmp);
 												// crear terceto del operador de la comparación
@@ -596,7 +675,7 @@ comparacion :
 						strcpy(terceto_operador_logico.posicion_a, "BLE");
 						strcpy(terceto_cmp.posicion_a, "CMP");
 		} expresion	{strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));				
-					printf("mayor  OK \n\n");}
+					printf("comparacion mayor  OK \n\n");}
 
 		| expresion MENOR {
 							strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
@@ -604,14 +683,14 @@ comparacion :
 								strcpy(terceto_operador_logico.posicion_a, "BGE");
 								strcpy(terceto_cmp.posicion_a, "CMP");
 		} expresion			{strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
-							printf("menor OK \n\n");}
+							printf("comparacion menor OK \n\n");}
 
 		| expresion MAYOR_IGUAL {strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
 								// guardamos el operador para incertarlo luego de crear el terceto del "CMP"
 								strcpy(terceto_operador_logico.posicion_a, "BLT");
 								strcpy(terceto_cmp.posicion_a, "CMP");
 		  }expresion {   strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
-			  			printf("mayor igual OK \n\n");}
+			  			printf("comparacion mayor igual OK \n\n");}
 		  
 		| expresion MENOR_IGUAL {
 								strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
@@ -619,7 +698,7 @@ comparacion :
 								strcpy(terceto_operador_logico.posicion_a, "BGT");
 								strcpy(terceto_cmp.posicion_a, "CMP");
 								strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
-		} expresion { printf("menor igual OK \n\n");}
+		} expresion { printf("comparacion menor igual OK \n\n");}
 
 		| expresion IGUAL {
 						strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
@@ -627,7 +706,7 @@ comparacion :
 			            strcpy(terceto_operador_logico.posicion_a, "BNE");
 			            strcpy(terceto_cmp.posicion_a, "CMP");
 		}expresion { 	strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
-						printf("igual OK \n\n");}
+						printf("comparacion igual OK \n\n");}
 
 		|expresion DISTINTO {
 							strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
@@ -635,7 +714,7 @@ comparacion :
 							strcpy(terceto_operador_logico.posicion_a, "BEQ");
 							strcpy(terceto_cmp.posicion_a, "CMP");
 		}expresion { 	strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
-						printf("distinto OK \n\n");}
+						printf("comparacion distinto OK \n\n");}
 
 %%
 

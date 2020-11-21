@@ -2,21 +2,13 @@ NOMBRE                              TIPO DE DATO     VALOR                      
 suma                                Float                                                                                   
 promedio                            Float                                                                                   
 contador                            Integer                                                                                 
-cad                                 String           cad                                                                    
 actual                              Float                                                                                   
-_92                                 const Integer    92                                                                     
+__CONTAR_CONTADOR                   Integer                                                                                 
 _52                                 const Integer    52                                                                     
 _4                                  const Integer    4                                                                      
 _256                                const Integer    256                                                                    
-_2                                  const Integer    2                                                                      
 _1                                  const Integer    1                                                                      
 _02.5                               const Real       02.5                                                                   
 _0.342                              const Real       0.342                                                                  
 _0                                  const Integer    0                                                                      
-_"no_es_mayor_que_2"                const String     "no_es_mayor_que_2"                 17                                 
-_"asdakjshda"                       const String     "asdakjshda"                        10                                 
-_"actual_es_>_2_y_<>_0"             const String     "actual_es_>_2_y_<>_0"              20                                 
-_"Prueba.txt_LyC_Tema_4"            const String     "Prueba.txt_LyC_Tema_4"             21                                 
-_"La_suma_es:_"                     const String     "La_suma_es:_"                      12                                 
-_"Ingrese_entero_para_actual:_"     const String     "Ingrese_entero_para_actual:_"      28                                 
                                                                                                                             
