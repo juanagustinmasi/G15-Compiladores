@@ -1,5 +1,7 @@
 DIM < contador ,promedio,actual,suma,cad> AS < Integer ,Float,Float,Float,String>
-if (actual>2 or actual <> 0){
+promedio:2.6;
+contador:promedio;
+if (actual>2 or actual <> 3){
 PUT "actual es > que 2 y <> de 0";
 }
 Else

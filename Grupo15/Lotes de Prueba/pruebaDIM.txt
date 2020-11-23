@@ -1,3 +1,4 @@
-DIM < contador ,contadorasdasd,actual,suma,cad> AS < String,Float,Float,Float,String>
-DIM < contador3 ,promedio1,actual5,suma1,cad1> AS < Integer ,Float,Float,Float,String>
-DIM < contador2 ,promedio4,actual2,suma6,cad2> AS < Integer ,Float,Float,Float,String>
+DIM <chau2,chau,chau1,chau3> AS <Float,String,Integer,Float>
+DIM <chau6,chau5,chau4,chau7> AS <String,Float,Float,Integer>
+chau:"ASF";
+chau6:"asfaf";

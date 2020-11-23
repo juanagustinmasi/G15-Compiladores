@@ -1,13 +1,15 @@
-DIM <actual> AS <Integer>
+DIM <actual,seges,heahae,heah> AS <Integer,Float,String,Float>
 
 actual:4;
 
-if (actual<1 ){
-PUT "actual es > que 2 y <> de 0";
-}
-Else
-{
+if (actual>2){​​
+PUT "actual es mayor 2";
+}​​
+Else{
+
 PUT "no es mayor que 2";
+PUT "HOLA 2";
+
 }
 
 actual:6;

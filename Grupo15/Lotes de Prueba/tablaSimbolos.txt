@@ -1,14 +1,15 @@
 NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
-suma                                Float                                                                                   
-promedio                            Float                                                                                   
-contador                            Integer                                                                                 
-actual                              Float                                                                                   
-__CONTAR_CONTADOR                   Integer                                                                                 
-_52                                 const Integer    52                                                                     
-_4                                  const Integer    4                                                                      
-_256                                const Integer    256                                                                    
+_suma                               Float                                                                                   
+_promedio                           Float                                                                                   
+_contador2                          Integer                                                                                 
+_contador                           Integer                                                                                 
+_cad_                               String                                                                                  
+_actual                             Float                                                                                   
+_@aux2                              Float                                                                                   
+_@aux1                              Float                                                                                   
+_@aux0                              Float                                                                                   
+_2                                  const Integer    2                                                                      
 _1                                  const Integer    1                                                                      
-_02.5                               const Real       02.5                                                                   
-_0.342                              const Real       0.342                                                                  
-_0                                  const Integer    0                                                                      
+_SUMA_ES_MENOR_A_2_                 const String     "SUMA_ES_MENOR_A_2"                 17                                 
+_SUMA_ES_MAYOR_A_2_                 const String     "SUMA_ES_MAYOR_A_2"                 17                                 
                                                                                                                             

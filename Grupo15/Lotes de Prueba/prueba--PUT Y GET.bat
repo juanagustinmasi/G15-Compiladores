@@ -2,9 +2,10 @@ flex ../Lexico.l
 bison -dyv ../sintactico.y
 gcc lex.yy.c y.tab.c -o segunda.exe
 pause
-segunda.exe prueba--CONTAR.txt
+segunda.exe "prueba--PUT Y GET.txt"
 del lex.yy.c
 del y.tab.c
 del y.output
 del y.tab.h
+del programa.exe
 pause

@@ -1,0 +1,4 @@
+DIM < contador,promedio,cad> AS < Integer ,Float,String>
+contador:0;
+PUT "Ingrese entero para contador";
+GET contador;
