@@ -1,6 +1,36 @@
 NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
-actual                              Integer                                                                                 
-6                                   const Integer    6                                                                      
-4                                   const Integer    4                                                                      
-1                                   const Integer    1                                                                      
+_suma                               Float                                                                                   
+_promedio                           Float                                                                                   
+_contador                           Integer                                                                                 
+_cad_                               String                                                                                  
+_actual                             Float                                                                                   
+__CONTAR_CONTADOR                   Integer                                                                                 
+_@aux9                              Float                                                                                   
+_@aux8                              Float                                                                                   
+_@aux7                              Float                                                                                   
+_@aux6                              Float                                                                                   
+_@aux5                              Float                                                                                   
+_@aux4                              Float                                                                                   
+_@aux3                              Float                                                                                   
+_@aux2                              Float                                                                                   
+_@aux10                             Float                                                                                   
+_@aux1                              Float                                                                                   
+_@aux0                              Float                                                                                   
+_92                                 const Integer    92                                                                     
+_52                                 const Integer    52                                                                     
+_4                                  const Integer    4                                                                      
+_256                                const Integer    256                                                                    
+_2                                  const Integer    2                                                                      
+_1                                  const Integer    1                                                                      
+_02_5                               const Real       02.5                                                                   
+_0_342                              const Real       0.342                                                                  
+_0                                  const Integer    0                                                                      
+_no_es_mayor_que_2_                 const String     "no_es_mayor_que_2"                 17                                 
+_compiladores_                      const String     "compiladores"                      12                                 
+_actual_es_>_2_y_<>_0_              const String     "actual_es_>_2_y_<>_0"              20                                 
+_Prueba_txt_LyC_Tema_4_             const String     "Prueba.txt_LyC_Tema_4"             21                                 
+_La_suma_es:__                      const String     "La_suma_es:_"                      12                                 
+_Ingrese_entero_para_actual:__      const String     "Ingrese_entero_para_actual:_"      28                                 
+_1                                  Integer          1                                                                      
+_0                                  Integer          0                                                                      
                                                                                                                             
