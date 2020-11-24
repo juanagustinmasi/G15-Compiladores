@@ -1,0 +1,6 @@
+DIM <suma, suma2, cad> AS <Float,Integer,String>
+
+suma:1.5;
+
+
+

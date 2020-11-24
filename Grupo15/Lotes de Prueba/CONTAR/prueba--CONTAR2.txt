@@ -1,0 +1,10 @@
+DIM < contador,promedio,actual,suma> AS < Integer,Float,Float,Float>
+
+CONST nombre=80;
+contador: 0;
+suma: 02.5+nombre;
+actual:24;
+
+contador: contador + 1;
+actual:(contar (actual*contador ;[142,nombre*suma,52,4]) * contador) + contador/0.342;
+suma: suma + actual;

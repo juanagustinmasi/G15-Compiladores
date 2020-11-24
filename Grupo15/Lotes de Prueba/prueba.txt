@@ -1,5 +1,9 @@
 DIM < contador ,promedio,actual,suma,cad> AS < Integer ,Float,Float,Float,String>
+<<<<<<< Updated upstream
 cad = "asdakjshda";
+=======
+cad = "compiladores";
+>>>>>>> Stashed changes
 PUT cad;
 CONST nombre=80;
 PUT "Prueba.txt LyC Tema 4";
@@ -22,4 +26,10 @@ Else
 if (actual < nombre){​​
 PUT "no es mayor que 2";
 }​​
+<<<<<<< Updated upstream
 }
+=======
+}
+
+
+>>>>>>> Stashed changes
