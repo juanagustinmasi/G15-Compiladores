@@ -673,6 +673,7 @@ comparacion :
 								strcpy(terceto_operador_logico.posicion_a, "BGT");
 								strcpy(terceto_cmp.posicion_a, "CMP");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 								strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
 		} expresion { printf("menor igual OK \n\n");}
 =======
