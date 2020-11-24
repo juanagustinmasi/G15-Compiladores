@@ -681,6 +681,11 @@ comparacion :
 		} expresion { 			strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion));
 								printf("comparacion menor igual OK \n\n");}
 >>>>>>> Stashed changes
+=======
+								
+		} expresion {strcpy(terceto_cmp.posicion_c, normalizarPunteroTerceto(p_terceto_expresion)); 
+			printf("comparacion menor igual OK \n\n");}
+>>>>>>> Stashed changes
 
 		| expresion IGUAL {
 						strcpy(terceto_cmp.posicion_b, normalizarPunteroTerceto(p_terceto_expresion));
